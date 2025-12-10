@@ -18,7 +18,8 @@ export async function geocodeAddress(
 ): Promise<Coordinates | null> {
   try {
     const encodedAddress = encodeURIComponent(address);
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+    // Use countrycodes=us and addressdetails for better accuracy in the US
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1&countrycodes=us&addressdetails=1`;
 
     const response = await fetch(url, {
       headers: {

@@ -19,7 +19,8 @@ async def geocode_address(address: str) -> Optional[Tuple[float, float]]:
     """
     try:
         encoded_address = quote(address)
-        url = f"https://nominatim.openstreetmap.org/search?q={encoded_address}&format=json&limit=1"
+        # Use countrycodes=us and addressdetails for better accuracy in the US
+        url = f"https://nominatim.openstreetmap.org/search?q={encoded_address}&format=json&limit=1&countrycodes=us&addressdetails=1"
         
         async with httpx.AsyncClient() as client:
             response = await client.get(
