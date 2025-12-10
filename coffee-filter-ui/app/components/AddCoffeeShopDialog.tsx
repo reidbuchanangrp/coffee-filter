@@ -27,12 +27,9 @@ interface AddCoffeeShopDialogProps {
 
 export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
   const [open, setOpen] = useState(false);
-  const [showManualCoords, setShowManualCoords] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     address: "",
-    latitude: "",
-    longitude: "",
     machine: "",
     accessibility: false,
     hasWifi: false,
@@ -46,22 +43,11 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Include coordinates only if manually provided
-    const submitData = {
-      ...formData,
-      latitude: formData.latitude ? parseFloat(formData.latitude) : undefined,
-      longitude: formData.longitude
-        ? parseFloat(formData.longitude)
-        : undefined,
-    };
-    onAdd?.(submitData);
+    onAdd?.(formData);
     setOpen(false);
-    setShowManualCoords(false);
     setFormData({
       name: "",
       address: "",
-      latitude: "",
-      longitude: "",
       machine: "",
       accessibility: false,
       hasWifi: false,
@@ -113,58 +99,10 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 placeholder="e.g., 4141 Troost Ave, Kansas City, MO 64110"
                 data-testid="input-shop-address"
               />
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">
-                  Coordinates will be automatically determined from the address
-                </p>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs h-auto p-0 underline hover:no-underline"
-                  onClick={() => setShowManualCoords(!showManualCoords)}
-                >
-                  {showManualCoords ? "Hide" : "Enter manually"}
-                </Button>
-              </div>
+              <p className="text-xs text-muted-foreground">
+                Coordinates will be automatically determined from the address
+              </p>
             </div>
-
-            {showManualCoords && (
-              <div className="col-span-2 grid grid-cols-2 gap-4 p-3 bg-muted/50 rounded-md">
-                <div className="space-y-2">
-                  <Label htmlFor="latitude">Latitude</Label>
-                  <Input
-                    id="latitude"
-                    type="number"
-                    step="any"
-                    value={formData.latitude}
-                    onChange={(e) =>
-                      setFormData({ ...formData, latitude: e.target.value })
-                    }
-                    placeholder="e.g., 39.0997"
-                    data-testid="input-latitude"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="longitude">Longitude</Label>
-                  <Input
-                    id="longitude"
-                    type="number"
-                    step="any"
-                    value={formData.longitude}
-                    onChange={(e) =>
-                      setFormData({ ...formData, longitude: e.target.value })
-                    }
-                    placeholder="e.g., -94.5786"
-                    data-testid="input-longitude"
-                  />
-                </div>
-                <p className="col-span-2 text-xs text-muted-foreground">
-                  Tip: Right-click on Google Maps and select coordinates to copy
-                  them
-                </p>
-              </div>
-            )}
 
             <div className="flex flex-col gap-2">
               <div className="space-y-2 ">

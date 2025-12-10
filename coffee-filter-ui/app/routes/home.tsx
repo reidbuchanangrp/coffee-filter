@@ -42,8 +42,7 @@ export default function Home() {
 
   const handleAddCoffeeShop = async (data: any) => {
     try {
-      // Convert form data to proper format
-      // If latitude/longitude are provided, use them; otherwise backend will geocode
+      // Convert form data to proper format (latitude/longitude will be geocoded by backend)
       const shopData: Omit<CoffeeShop, "id" | "latitude" | "longitude"> & {
         latitude?: number;
         longitude?: number;
@@ -61,14 +60,6 @@ export default function Home() {
         website: data.website || undefined,
         instagram: data.instagram || undefined,
       };
-
-      // Include manual coordinates if provided
-      if (data.latitude !== undefined && !isNaN(data.latitude)) {
-        shopData.latitude = data.latitude;
-      }
-      if (data.longitude !== undefined && !isNaN(data.longitude)) {
-        shopData.longitude = data.longitude;
-      }
 
       const { createCoffeeShop } = await import("../lib/api");
       await createCoffeeShop(shopData as Omit<CoffeeShop, "id">);

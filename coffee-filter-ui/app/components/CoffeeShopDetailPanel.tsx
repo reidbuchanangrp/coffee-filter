@@ -55,10 +55,8 @@ export function CoffeeShopDetailPanel({
             </h1>
           </div>
           <p className="text-muted-foreground flex items-start gap-2">
-            <MapPin className="h-4 w-4 mt-1 shrink-0" />
-            <span className="" data-testid="text-shop-address">
-              {shop.address}
-            </span>
+            <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
+            <span data-testid="text-shop-address">{shop.address}</span>
           </p>
         </div>
 
@@ -204,16 +202,7 @@ export function CoffeeShopDetailPanel({
         )}
 
         <div className="flex gap-3">
-          <Button
-            className="flex-1"
-            data-testid="button-get-directions"
-            onClick={() => {
-              window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${shop.address}`,
-                "_blank"
-              );
-            }}
-          >
+          <Button className="flex-1" data-testid="button-get-directions">
             <MapPin className="h-4 w-4 mr-2" />
             Get Directions
           </Button>
