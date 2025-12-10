@@ -1,0 +1,27 @@
+version: "3.8"
+
+# Development configuration using SQLite (no PostgreSQL required)
+# Usage: docker compose -f docker-compose.dev.yml up --build
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./coffee_shops.db
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+    volumes:
+      - ./backend/coffee_shops.db:/app/coffee_shops.db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./coffee-filter-ui
+      args:
+        - VITE_API_URL=http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped

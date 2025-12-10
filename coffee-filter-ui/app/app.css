@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans:
+    Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: Crimson Pro, Georgia, serif;
+  --font-mono: Menlo, Monaco, "Courier New", monospace;
+
+  /* Border Radius */
+  --radius: 0.75rem;
+
+  /* Spacing */
+  --spacing: 0.25rem;
+
+  /* Letter Spacing */
+  --tracking-normal: 0em;
+
+  /* Light Mode Colors (HSL format) */
+  --color-background: hsl(30 4% 96%);
+  --color-foreground: hsl(30 8% 12%);
+  --color-border: hsl(30 6% 86%);
+  --color-card: hsl(30 5% 94%);
+  --color-card-foreground: hsl(30 8% 12%);
+  --color-card-border: hsl(30 6% 88%);
+  --color-sidebar: hsl(30 5% 92%);
+  --color-sidebar-foreground: hsl(30 8% 12%);
+  --color-sidebar-border: hsl(30 6% 84%);
+  --color-sidebar-primary: hsl(28 82% 48%);
+  --color-sidebar-primary-foreground: hsl(30 5% 98%);
+  --color-sidebar-accent: hsl(30 12% 88%);
+  --color-sidebar-accent-foreground: hsl(30 8% 20%);
+  --color-sidebar-ring: hsl(28 82% 48%);
+  --color-popover: hsl(30 6% 90%);
+  --color-popover-foreground: hsl(30 8% 12%);
+  --color-popover-border: hsl(30 7% 82%);
+  --color-primary: hsl(28 82% 48%);
+  --color-primary-foreground: hsl(30 5% 98%);
+  --color-secondary: hsl(30 10% 86%);
+  --color-secondary-foreground: hsl(30 8% 18%);
+  --color-muted: hsl(30 8% 88%);
+  --color-muted-foreground: hsl(30 6% 38%);
+  --color-accent: hsl(30 14% 86%);
+  --color-accent-foreground: hsl(30 8% 20%);
+  --color-destructive: hsl(0 72% 42%);
+  --color-destructive-foreground: hsl(0 5% 98%);
+  --color-input: hsl(30 8% 68%);
+  --color-ring: hsl(28 82% 48%);
+  --color-chart-1: hsl(28 85% 42%);
+  --color-chart-2: hsl(18 75% 48%);
+  --color-chart-3: hsl(38 70% 45%);
+  --color-chart-4: hsl(48 65% 40%);
+  --color-chart-5: hsl(8 80% 44%);
+
+  /* Custom CSS Variables */
+  --button-outline: rgba(0, 0, 0, 0.1);
+  --badge-outline: rgba(0, 0, 0, 0.05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0, 0, 0, 0.03);
+  --elevate-2: rgba(0, 0, 0, 0.08);
+
+  /* Shadows */
+  --shadow-2xs: 0px 1px 2px 0px hsl(30 8% 12% / 0.05);
+  --shadow-xs: 0px 1px 3px 0px hsl(30 8% 12% / 0.08);
+  --shadow-sm:
+    0px 2px 4px -1px hsl(30 8% 12% / 0.06),
+    0px 1px 2px -1px hsl(30 8% 12% / 0.04);
+  --shadow:
+    0px 4px 6px -1px hsl(30 8% 12% / 0.08),
+    0px 2px 4px -2px hsl(30 8% 12% / 0.05);
+  --shadow-md:
+    0px 6px 12px -2px hsl(30 8% 12% / 0.1),
+    0px 3px 6px -3px hsl(30 8% 12% / 0.05);
+  --shadow-lg:
+    0px 10px 20px -4px hsl(30 8% 12% / 0.12),
+    0px 4px 8px -4px hsl(30 8% 12% / 0.06);
+  --shadow-xl:
+    0px 20px 32px -8px hsl(30 8% 12% / 0.14),
+    0px 8px 16px -8px hsl(30 8% 12% / 0.08);
+  --shadow-2xl: 0px 32px 48px -12px hsl(30 8% 12% / 0.18);
+}
+
+/* Dark Mode */
+.dark {
+  --color-background: hsl(30 4% 8%);
+  --color-foreground: hsl(30 5% 92%);
+  --color-border: hsl(30 5% 18%);
+  --color-card: hsl(30 4% 11%);
+  --color-card-foreground: hsl(30 5% 92%);
+  --color-card-border: hsl(30 5% 16%);
+  --color-sidebar: hsl(30 4% 13%);
+  --color-sidebar-foreground: hsl(30 5% 92%);
+  --color-sidebar-border: hsl(30 5% 20%);
+  --color-sidebar-primary: hsl(28 78% 52%);
+  --color-sidebar-primary-foreground: hsl(30 4% 10%);
+  --color-sidebar-accent: hsl(30 10% 18%);
+  --color-sidebar-accent-foreground: hsl(30 5% 90%);
+  --color-sidebar-ring: hsl(28 78% 52%);
+  --color-popover: hsl(30 5% 15%);
+  --color-popover-foreground: hsl(30 5% 92%);
+  --color-popover-border: hsl(30 5% 22%);
+  --color-primary: hsl(28 78% 52%);
+  --color-primary-foreground: hsl(30 4% 10%);
+  --color-secondary: hsl(30 8% 20%);
+  --color-secondary-foreground: hsl(30 5% 90%);
+  --color-muted: hsl(30 6% 16%);
+  --color-muted-foreground: hsl(30 5% 65%);
+  --color-accent: hsl(30 12% 18%);
+  --color-accent-foreground: hsl(30 5% 88%);
+  --color-destructive: hsl(0 68% 48%);
+  --color-destructive-foreground: hsl(0 4% 98%);
+  --color-input: hsl(30 6% 32%);
+  --color-ring: hsl(28 78% 52%);
+  --color-chart-1: hsl(28 82% 62%);
+  --color-chart-2: hsl(18 78% 65%);
+  --color-chart-3: hsl(38 75% 68%);
+  --color-chart-4: hsl(48 70% 62%);
+  --color-chart-5: hsl(8 82% 64%);
+
+  --button-outline: rgba(255, 255, 255, 0.1);
+  --badge-outline: rgba(255, 255, 255, 0.05);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255, 255, 255, 0.04);
+  --elevate-2: rgba(255, 255, 255, 0.09);
+
+  --shadow-2xs: 0px 1px 2px 0px hsl(30 8% 4% / 0.4);
+  --shadow-xs: 0px 1px 3px 0px hsl(30 8% 4% / 0.5);
+  --shadow-sm:
+    0px 2px 4px -1px hsl(30 8% 4% / 0.45), 0px 1px 2px -1px hsl(30 8% 4% / 0.35);
+  --shadow:
+    0px 4px 6px -1px hsl(30 8% 4% / 0.5), 0px 2px 4px -2px hsl(30 8% 4% / 0.4);
+  --shadow-md:
+    0px 6px 12px -2px hsl(30 8% 4% / 0.55),
+    0px 3px 6px -3px hsl(30 8% 4% / 0.45);
+  --shadow-lg:
+    0px 10px 20px -4px hsl(30 8% 4% / 0.6), 0px 4px 8px -4px hsl(30 8% 4% / 0.5);
+  --shadow-xl:
+    0px 20px 32px -8px hsl(30 8% 4% / 0.65),
+    0px 8px 16px -8px hsl(30 8% 4% / 0.55);
+  --shadow-2xl: 0px 32px 48px -12px hsl(30 8% 4% / 0.7);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Hide ugly search cancel button in Chrome */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--color-muted-foreground));
+    pointer-events: none;
+  }
+
+  .no-default-hover-elevate {
+  }
+  .no-default-active-elevate {
+  }
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: 999;
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after {
+    inset: -1px;
+  }
+}
