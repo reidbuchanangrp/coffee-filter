@@ -9,7 +9,7 @@ import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
+    { title: "FilterCoffee" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
