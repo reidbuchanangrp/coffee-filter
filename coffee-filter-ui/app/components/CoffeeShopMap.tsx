@@ -13,7 +13,8 @@ export function CoffeeShopMap({
   selectedShopId,
   onMarkerClick,
 }: CoffeeShopMapProps) {
-  const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
+  const [MapComponent, setMapComponent] =
+    useState<React.ComponentType<any> | null>(null);
 
   useEffect(() => {
     // Dynamically import Leaflet only on the client

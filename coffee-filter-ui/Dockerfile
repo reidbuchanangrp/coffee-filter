@@ -21,6 +21,6 @@ COPY ./package.json package-lock.json /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
-EXPOSE 3000
+EXPOSE 8080
 # Use PORT env var for Railway compatibility
-CMD ["sh", "-c", "PORT=${PORT:-3000} npm run start"]
+CMD ["sh", "-c", "PORT=${PORT:-8080} npm run start"]
