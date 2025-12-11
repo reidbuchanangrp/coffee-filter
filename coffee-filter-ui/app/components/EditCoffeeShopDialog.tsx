@@ -345,7 +345,6 @@ export function EditCoffeeShopDialog({
                 }
                 placeholder="https://example.com"
                 data-testid="edit-input-website"
-                required
               />
             </div>
 

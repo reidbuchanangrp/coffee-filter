@@ -337,7 +337,6 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 }
                 placeholder="https://example.com"
                 data-testid="input-website"
-                required
               />
             </div>
 
