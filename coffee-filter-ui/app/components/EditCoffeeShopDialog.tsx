@@ -21,6 +21,30 @@ interface EditCoffeeShopDialogProps {
   onSave: (id: number, data: Partial<CoffeeShop>) => Promise<void>;
 }
 
+// Convert Instagram username to full URL
+function formatInstagramUrl(input: string): string | undefined {
+  if (!input) return undefined;
+  // If it's already a full URL, return as-is
+  if (input.startsWith("http://") || input.startsWith("https://")) {
+    return input;
+  }
+  // Remove @ if present and create full URL
+  const username = input.replace(/^@/, "").trim();
+  return username ? `https://instagram.com/${username}` : undefined;
+}
+
+// Extract username from Instagram URL for display in form
+function extractInstagramUsername(url: string): string {
+  if (!url) return "";
+  // If it's a full URL, extract username
+  const match = url.match(/instagram\.com\/([^/?]+)/);
+  if (match) {
+    return `@${match[1]}`;
+  }
+  // If it already looks like a username, return as-is
+  return url.startsWith("@") ? url : `@${url}`;
+}
+
 export function EditCoffeeShopDialog({
   shop,
   open,
@@ -63,7 +87,7 @@ export function EditCoffeeShopDialog({
         hours: shop.hours || "",
         daysOpen: shop.daysOpen || [],
         website: shop.website || "",
-        instagram: shop.instagram || "",
+        instagram: extractInstagramUsername(shop.instagram || ""),
         pourOver: shop.pourOver,
       });
       setUseManualCoords(false);
@@ -88,7 +112,7 @@ export function EditCoffeeShopDialog({
         hours: formData.hours,
         daysOpen: formData.daysOpen,
         website: formData.website || undefined,
-        instagram: formData.instagram || undefined,
+        instagram: formatInstagramUrl(formData.instagram),
         pourOver: formData.pourOver,
       };
 

@@ -26,6 +26,18 @@ interface AddCoffeeShopDialogProps {
   onAdd?: (data: any) => Promise<void>;
 }
 
+// Convert Instagram username to full URL
+function formatInstagramUrl(input: string): string | undefined {
+  if (!input) return undefined;
+  // If it's already a full URL, return as-is
+  if (input.startsWith("http://") || input.startsWith("https://")) {
+    return input;
+  }
+  // Remove @ if present and create full URL
+  const username = input.replace(/^@/, "").trim();
+  return username ? `https://instagram.com/${username}` : undefined;
+}
+
 export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -65,6 +77,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
         useManualCoords && formData.longitude
           ? parseFloat(formData.longitude)
           : undefined,
+      instagram: formatInstagramUrl(formData.instagram),
     };
 
     try {
