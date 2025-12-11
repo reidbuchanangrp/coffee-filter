@@ -46,34 +46,29 @@ export default function Home() {
   }, []);
 
   const handleAddCoffeeShop = async (data: any) => {
-    try {
-      // Convert form data to proper format (latitude/longitude will be geocoded by backend)
-      const shopData: Omit<CoffeeShop, "id" | "latitude" | "longitude"> & {
-        latitude?: number;
-        longitude?: number;
-      } = {
-        name: data.name,
-        address: data.address,
-        image: data.image || "",
-        accessibility: data.accessibility || false,
-        hasWifi: data.hasWifi || false,
-        description: data.description || "",
-        machine: data.machine || "",
-        hours: data.hours || "",
-        daysOpen: data.daysOpen || [],
-        pourOver: data.pourOver || false,
-        website: data.website || undefined,
-        instagram: data.instagram || undefined,
-      };
+    // Convert form data to proper format (latitude/longitude will be geocoded by backend)
+    const shopData: Omit<CoffeeShop, "id" | "latitude" | "longitude"> & {
+      latitude?: number;
+      longitude?: number;
+    } = {
+      name: data.name,
+      address: data.address,
+      image: data.image || "",
+      accessibility: data.accessibility || false,
+      hasWifi: data.hasWifi || false,
+      description: data.description || "",
+      machine: data.machine || "",
+      hours: data.hours || "",
+      daysOpen: data.daysOpen || [],
+      pourOver: data.pourOver || false,
+      website: data.website || undefined,
+      instagram: data.instagram || undefined,
+    };
 
-      const { createCoffeeShop } = await import("../lib/api");
-      await createCoffeeShop(shopData as Omit<CoffeeShop, "id">);
-      // Refresh the list
-      await fetchCoffeeShops();
-    } catch (err) {
-      console.error("Error adding coffee shop:", err);
-      alert(err instanceof Error ? err.message : "Failed to add coffee shop");
-    }
+    const { createCoffeeShop } = await import("../lib/api");
+    await createCoffeeShop(shopData as Omit<CoffeeShop, "id">);
+    // Refresh the list
+    await fetchCoffeeShops();
   };
 
   const handleDeleteCoffeeShop = async (id: number) => {

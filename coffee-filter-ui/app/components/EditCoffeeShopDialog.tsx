@@ -44,6 +44,7 @@ export function EditCoffeeShopDialog({
   });
   const [useManualCoords, setUseManualCoords] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize form data when shop changes or dialog opens
   useEffect(() => {
@@ -64,12 +65,14 @@ export function EditCoffeeShopDialog({
         pourOver: shop.pourOver,
       });
       setUseManualCoords(false);
+      setError(null);
     }
   }, [open, shop]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setError(null);
 
     try {
       const updateData: Partial<CoffeeShop> = {
@@ -94,8 +97,11 @@ export function EditCoffeeShopDialog({
 
       await onSave(shop.id, updateData);
       onOpenChange(false);
-    } catch (error) {
-      console.error("Error saving coffee shop:", error);
+    } catch (err) {
+      console.error("Error saving coffee shop:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to save coffee shop"
+      );
     } finally {
       setIsSaving(false);
     }
@@ -108,6 +114,11 @@ export function EditCoffeeShopDialog({
           <DialogTitle>Edit Coffee Shop</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 col-span-2">
               <Label htmlFor="edit-name">Name *</Label>
@@ -217,7 +228,6 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, pourOver: checked })
                   }
                   data-testid="edit-switch-pour-over"
-                  required
                 />
               </div>
 
@@ -230,7 +240,6 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, accessibility: checked })
                   }
                   data-testid="edit-switch-accessibility"
-                  required
                 />
               </div>
 
@@ -245,7 +254,6 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, hasWifi: checked })
                   }
                   data-testid="edit-switch-wifi"
-                  required
                 />
               </div>
             </div>

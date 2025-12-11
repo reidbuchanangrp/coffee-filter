@@ -19,11 +19,11 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AddressAutocomplete } from "./AddressAutocomplete";
 
 interface AddCoffeeShopDialogProps {
-  onAdd?: (data: any) => void;
+  onAdd?: (data: any) => Promise<void>;
 }
 
 export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
@@ -44,9 +44,15 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     pourOver: false,
   });
   const [useManualCoords, setUseManualCoords] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const latitudeInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
     // Include coordinates if manually entered
     const submitData = {
       ...formData,
@@ -59,24 +65,41 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
           ? parseFloat(formData.longitude)
           : undefined,
     };
-    onAdd?.(submitData);
-    setOpen(false);
-    setFormData({
-      name: "",
-      address: "",
-      latitude: "",
-      longitude: "",
-      machine: "",
-      accessibility: false,
-      hasWifi: false,
-      description: "",
-      hours: "",
-      daysOpen: [],
-      website: "",
-      instagram: "",
-      pourOver: false,
-    });
-    setUseManualCoords(false);
+
+    try {
+      await onAdd?.(submitData);
+      // Only close and reset form on success
+      setOpen(false);
+      setFormData({
+        name: "",
+        address: "",
+        latitude: "",
+        longitude: "",
+        machine: "",
+        accessibility: false,
+        hasWifi: false,
+        description: "",
+        hours: "",
+        daysOpen: [],
+        website: "",
+        instagram: "",
+        pourOver: false,
+      });
+      setUseManualCoords(false);
+    } catch (err) {
+      // Keep dialog open and show error
+      setError(
+        err instanceof Error ? err.message : "Failed to add coffee shop"
+      );
+      // Enable manual coords and focus latitude input for geocoding errors
+      setUseManualCoords(true);
+      // Use setTimeout to wait for the input to render before focusing
+      setTimeout(() => {
+        latitudeInputRef.current?.focus();
+      }, 0);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -92,6 +115,11 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
           <DialogTitle>Add New Coffee Shop</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 col-span-2">
               <Label htmlFor="name">Name *</Label>
@@ -150,6 +178,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 <div className="space-y-2">
                   <Label htmlFor="latitude">Latitude *</Label>
                   <Input
+                    ref={latitudeInputRef}
                     id="latitude"
                     type="number"
                     step="any"
@@ -203,7 +232,6 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, pourOver: checked })
                   }
                   data-testid="switch-pour-over"
-                  required
                 />
               </div>
 
@@ -216,7 +244,6 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, accessibility: checked })
                   }
                   data-testid="switch-accessibility"
-                  required
                 />
               </div>
 
@@ -231,7 +258,6 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, hasWifi: checked })
                   }
                   data-testid="switch-wifi"
-                  required
                 />
               </div>
             </div>
@@ -273,7 +299,6 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                         setFormData({ ...formData, daysOpen: newDays });
                       }}
                       data-testid={`checkbox-${day.toLowerCase()}`}
-                      required
                     />
                     <Label
                       htmlFor={day}
@@ -335,12 +360,17 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
+              disabled={isSubmitting}
               data-testid="button-cancel"
             >
               Cancel
             </Button>
-            <Button type="submit" data-testid="button-submit">
-              Add Coffee Shop
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              data-testid="button-submit"
+            >
+              {isSubmitting ? "Adding..." : "Add Coffee Shop"}
             </Button>
           </div>
         </form>
