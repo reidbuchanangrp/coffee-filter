@@ -19,7 +19,7 @@ const createCoffeeIcon = (isSelected: boolean) => {
         boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
       }}
     >
-      <Coffee size={16} color="white" />
+      <Coffee size={17} color="white" />
     </div>
   );
   return L.divIcon({
