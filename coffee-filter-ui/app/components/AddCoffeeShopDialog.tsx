@@ -30,6 +30,8 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
+    latitude: "",
+    longitude: "",
     machine: "",
     accessibility: false,
     hasWifi: false,
@@ -40,14 +42,23 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     instagram: "",
     pourOver: false,
   });
+  const [useManualCoords, setUseManualCoords] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd?.(formData);
+    // Include coordinates if manually entered
+    const submitData = {
+      ...formData,
+      latitude: useManualCoords && formData.latitude ? parseFloat(formData.latitude) : undefined,
+      longitude: useManualCoords && formData.longitude ? parseFloat(formData.longitude) : undefined,
+    };
+    onAdd?.(submitData);
     setOpen(false);
     setFormData({
       name: "",
       address: "",
+      latitude: "",
+      longitude: "",
       machine: "",
       accessibility: false,
       hasWifi: false,
@@ -58,6 +69,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
       instagram: "",
       pourOver: false,
     });
+    setUseManualCoords(false);
   };
 
   return (
@@ -100,9 +112,58 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 data-testid="input-shop-address"
               />
               <p className="text-xs text-muted-foreground">
-                Coordinates will be automatically determined from the address
+                {useManualCoords 
+                  ? "Using manually entered coordinates" 
+                  : "Coordinates will be automatically determined from the address"}
               </p>
             </div>
+
+            <div className="flex items-center space-x-2 col-span-2">
+              <Switch
+                id="manualCoords"
+                checked={useManualCoords}
+                onCheckedChange={setUseManualCoords}
+                data-testid="switch-manual-coords"
+              />
+              <Label htmlFor="manualCoords" className="cursor-pointer">
+                Enter coordinates manually
+              </Label>
+            </div>
+
+            {useManualCoords && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="latitude">Latitude *</Label>
+                  <Input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    value={formData.latitude}
+                    onChange={(e) =>
+                      setFormData({ ...formData, latitude: e.target.value })
+                    }
+                    required={useManualCoords}
+                    placeholder="e.g., 39.0558"
+                    data-testid="input-latitude"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="longitude">Longitude *</Label>
+                  <Input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    value={formData.longitude}
+                    onChange={(e) =>
+                      setFormData({ ...formData, longitude: e.target.value })
+                    }
+                    required={useManualCoords}
+                    placeholder="e.g., -94.5734"
+                    data-testid="input-longitude"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="flex flex-col gap-2">
               <div className="space-y-2 ">
