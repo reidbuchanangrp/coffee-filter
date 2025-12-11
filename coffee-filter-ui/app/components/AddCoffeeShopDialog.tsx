@@ -33,6 +33,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     address: "",
     latitude: "",
     longitude: "",
+    image: "",
     machine: "",
     accessibility: false,
     hasWifi: false,
@@ -75,6 +76,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
         address: "",
         latitude: "",
         longitude: "",
+        image: "",
         machine: "",
         accessibility: false,
         hasWifi: false,
@@ -352,6 +354,35 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 data-testid="input-description"
                 required
               />
+            </div>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="image">Image URL (optional)</Label>
+              <Input
+                id="image"
+                type="url"
+                value={formData.image}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.value })
+                }
+                placeholder="https://example.com/image.jpg"
+                data-testid="input-image"
+              />
+              {formData.image && (
+                <div className="mt-2">
+                  <img
+                    src={formData.image}
+                    alt="Preview"
+                    className="max-h-32 rounded-md object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                    onLoad={(e) => {
+                      (e.target as HTMLImageElement).style.display = "block";
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 

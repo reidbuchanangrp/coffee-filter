@@ -243,6 +243,15 @@ export function CoffeeShopDetailPanel({
             </div>
           </div>
         )}
+        <div className="flex items-center gap-2 text-sm font-medium mb-2">
+          <img
+            src={shop.image || ""}
+            alt={shop.name}
+            width={500}
+            height={500}
+            className="w-full h-full object-cover rounded-md"
+          />
+        </div>
 
         <div className="flex gap-3">
           <Button className="flex-1" data-testid="button-get-directions">

@@ -32,6 +32,7 @@ export function EditCoffeeShopDialog({
     address: "",
     latitude: "",
     longitude: "",
+    image: "",
     machine: "",
     accessibility: false,
     hasWifi: false,
@@ -54,6 +55,7 @@ export function EditCoffeeShopDialog({
         address: shop.address,
         latitude: shop.latitude.toString(),
         longitude: shop.longitude.toString(),
+        image: shop.image || "",
         machine: shop.machine || "",
         accessibility: shop.accessibility,
         hasWifi: shop.hasWifi,
@@ -78,6 +80,7 @@ export function EditCoffeeShopDialog({
       const updateData: Partial<CoffeeShop> = {
         name: formData.name,
         address: formData.address,
+        image: formData.image || undefined,
         machine: formData.machine,
         accessibility: formData.accessibility,
         hasWifi: formData.hasWifi,
@@ -349,6 +352,35 @@ export function EditCoffeeShopDialog({
                 data-testid="edit-input-description"
                 required
               />
+            </div>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="edit-image">Image URL (optional)</Label>
+              <Input
+                id="edit-image"
+                type="url"
+                value={formData.image}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.value })
+                }
+                placeholder="https://example.com/image.jpg"
+                data-testid="edit-input-image"
+              />
+              {formData.image && (
+                <div className="mt-2">
+                  <img
+                    src={formData.image}
+                    alt="Preview"
+                    className="max-h-32 rounded-md object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                    onLoad={(e) => {
+                      (e.target as HTMLImageElement).style.display = "block";
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
