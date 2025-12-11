@@ -298,7 +298,6 @@ export function EditCoffeeShopDialog({
                         setFormData({ ...formData, daysOpen: newDays });
                       }}
                       data-testid={`edit-checkbox-${day.toLowerCase()}`}
-                      required
                     />
                     <Label
                       htmlFor={`edit-${day}`}
