@@ -109,7 +109,7 @@ export function CoffeeShopDetailPanel({
                 <span className="font-medium">Espresso Machine</span>
               </div>
               <p className="text-sm text-muted-foreground pl-6">
-                {shop.machine}
+                {shop.machine ? shop.machine : "Unknown"}
               </p>
             </div>
             <div className="space-y-1">
@@ -139,7 +139,9 @@ export function CoffeeShopDetailPanel({
                 />
                 <span className="font-medium">Accessibility</span>
               </div>
-              <p className="text-sm text-muted-foreground pl-6">
+              <p
+                className={`text-sm text-muted-foreground ${shop.accessibility ? "" : "pl-6"}`}
+              >
                 {shop.accessibility ? (
                   <span className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-primary" />
