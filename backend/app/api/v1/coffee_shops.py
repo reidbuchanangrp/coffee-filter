@@ -3,7 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.core.database import get_db
 from app.core.geocoding import geocode_address
+from app.core.auth import get_current_admin_user
 from app.models.coffee_shop import CoffeeShop
+from app.models.user import User
 from app.schemas.coffee_shop import CoffeeShop as CoffeeShopSchema, CoffeeShopCreate, CoffeeShopUpdate
 
 router = APIRouter()
@@ -27,9 +29,13 @@ def get_coffee_shop(shop_id: int, db: Session = Depends(get_db)):
     return shop
 
 @router.post("/coffee-shops", response_model=CoffeeShopSchema, status_code=201)
-async def create_coffee_shop(shop: CoffeeShopCreate, db: Session = Depends(get_db)):
+async def create_coffee_shop(
+    shop: CoffeeShopCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
     """
-    Create a new coffee shop.
+    Create a new coffee shop. Requires admin authentication.
     If latitude/longitude are not provided, they will be geocoded from the address.
     """
     # Geocode address if coordinates are not provided
@@ -68,9 +74,14 @@ async def create_coffee_shop(shop: CoffeeShopCreate, db: Session = Depends(get_d
     return db_shop
 
 @router.put("/coffee-shops/{shop_id}", response_model=CoffeeShopSchema)
-def update_coffee_shop(shop_id: int, shop: CoffeeShopUpdate, db: Session = Depends(get_db)):
+def update_coffee_shop(
+    shop_id: int,
+    shop: CoffeeShopUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
     """
-    Update a coffee shop.
+    Update a coffee shop. Requires admin authentication.
     """
     db_shop = db.query(CoffeeShop).filter(CoffeeShop.id == shop_id).first()
     if db_shop is None:
@@ -86,9 +97,13 @@ def update_coffee_shop(shop_id: int, shop: CoffeeShopUpdate, db: Session = Depen
     return db_shop
 
 @router.delete("/coffee-shops/{shop_id}", status_code=204)
-def delete_coffee_shop(shop_id: int, db: Session = Depends(get_db)):
+def delete_coffee_shop(
+    shop_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
     """
-    Delete a coffee shop.
+    Delete a coffee shop. Requires admin authentication.
     """
     db_shop = db.query(CoffeeShop).filter(CoffeeShop.id == shop_id).first()
     if db_shop is None:

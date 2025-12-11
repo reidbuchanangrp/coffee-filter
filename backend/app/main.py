@@ -1,9 +1,9 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import coffee_shops
+from app.api.v1 import coffee_shops, auth
 from app.core.database import engine, Base
-from app.models import coffee_shop
+from app.models import coffee_shop, user
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -34,6 +34,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(coffee_shops.router, prefix="/api/v1", tags=["coffee-shops"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 
 @app.get("/")
 async def root():
