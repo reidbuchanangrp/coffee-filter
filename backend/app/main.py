@@ -15,27 +15,21 @@ app = FastAPI(
 )
 
 # Configure CORS to allow requests from the frontend
-cors_origins = [
+# In production, set CORS_ORIGINS env var to your frontend URL(s)
+cors_origins = os.getenv("CORS_ORIGINS", "").split(",") if os.getenv("CORS_ORIGINS") else []
+cors_origins.extend([
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:3000",
     "http://localhost:5175",
-    # Production frontend URLs
-    "https://coffee-filter-ui-production.up.railway.app",
-]
-
-# Add any additional origins from environment variable
-env_origins = os.getenv("CORS_ORIGINS", "")
-if env_origins:
-    cors_origins.extend([o.strip() for o in env_origins.split(",") if o.strip()])
+])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
 )
 
 # Include routers

@@ -2,7 +2,7 @@ import { Coffee } from "lucide-react";
 import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
-import { getCoffeeShops } from "../lib/api";
+import { getCoffeeShops, deleteCoffeeShop } from "../lib/api";
 import { useEffect, useState } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
@@ -70,6 +70,19 @@ export default function Home() {
       alert(err instanceof Error ? err.message : "Failed to add coffee shop");
     }
   };
+
+  const handleDeleteCoffeeShop = async (id: number) => {
+    try {
+      await deleteCoffeeShop(id);
+      setSelectedShop(null);
+      await fetchCoffeeShops();
+    } catch (err) {
+      console.error("Error deleting coffee shop:", err);
+      alert(err instanceof Error ? err.message : "Failed to delete coffee shop");
+      throw err;
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col">
       <header className="flex items-center justify-between px-6 py-3 border-b bg-primary">
@@ -102,6 +115,7 @@ export default function Home() {
           <CoffeeShopDetailPanel
             shop={selectedShop}
             onClose={() => setSelectedShop(null)}
+            onDelete={handleDeleteCoffeeShop}
           />
         )}
       </main>

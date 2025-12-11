@@ -49,8 +49,14 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     // Include coordinates if manually entered
     const submitData = {
       ...formData,
-      latitude: useManualCoords && formData.latitude ? parseFloat(formData.latitude) : undefined,
-      longitude: useManualCoords && formData.longitude ? parseFloat(formData.longitude) : undefined,
+      latitude:
+        useManualCoords && formData.latitude
+          ? parseFloat(formData.latitude)
+          : undefined,
+      longitude:
+        useManualCoords && formData.longitude
+          ? parseFloat(formData.longitude)
+          : undefined,
     };
     onAdd?.(submitData);
     setOpen(false);
@@ -112,8 +118,8 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 data-testid="input-shop-address"
               />
               <p className="text-xs text-muted-foreground">
-                {useManualCoords 
-                  ? "Using manually entered coordinates" 
+                {useManualCoords
+                  ? "Using manually entered coordinates"
                   : "Coordinates will be automatically determined from the address"}
               </p>
             </div>

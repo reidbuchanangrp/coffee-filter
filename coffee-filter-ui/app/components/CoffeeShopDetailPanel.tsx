@@ -11,7 +11,9 @@ import {
   Calendar,
   Accessibility,
   Check,
+  Trash2,
 } from "lucide-react";
+import { useState } from "react";
 import { SiInstagram } from "react-icons/si";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -21,12 +23,28 @@ import type { CoffeeShop } from "../lib/types";
 interface CoffeeShopDetailPanelProps {
   shop: CoffeeShop;
   onClose: () => void;
+  onDelete?: (id: number) => void;
 }
 
 export function CoffeeShopDetailPanel({
   shop,
   onClose,
+  onDelete,
 }: CoffeeShopDetailPanelProps) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDelete?.(shop.id);
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete shop:", error);
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div
       className="fixed top-0 right-0 h-full w-full md:w-[440px] bg-background border-l shadow-xl z-1000 overflow-y-auto"
@@ -207,6 +225,48 @@ export function CoffeeShopDetailPanel({
             Get Directions
           </Button>
         </div>
+
+        {onDelete && (
+          <div className="border-t pt-4 mt-4">
+            {!showDeleteConfirm ? (
+              <Button
+                variant="outline"
+                className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={() => setShowDeleteConfirm(true)}
+                data-testid="button-delete-shop"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Coffee Shop
+              </Button>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground text-center">
+                  Are you sure you want to delete <strong>{shop.name}</strong>?
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowDeleteConfirm(false)}
+                    disabled={isDeleting}
+                    data-testid="button-cancel-delete"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="flex-1"
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    data-testid="button-confirm-delete"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
