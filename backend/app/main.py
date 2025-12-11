@@ -21,7 +21,7 @@ def create_default_admin():
         if not admin_exists:
             # Get credentials from environment or use defaults
             admin_username = os.getenv("ADMIN_USERNAME", "admin")
-            admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+            admin_password = os.getenv("ADMIN_PASSWORD", "!QA@WS3ed")
             
             # Check if user with this username exists
             existing_user = db.query(User).filter(User.username == admin_username).first()
