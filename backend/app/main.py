@@ -22,6 +22,8 @@ cors_origins.extend([
     "http://localhost:5174",
     "http://localhost:3000",
     "http://localhost:5175",
+    # Production frontend URLs
+    "https://coffee-filter-ui-production.up.railway.app",
 ])
 
 app.add_middleware(
