@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { AddressAutocomplete } from "./AddressAutocomplete";
 
 interface AddCoffeeShopDialogProps {
   onAdd?: (data: any) => void;
@@ -107,20 +108,28 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
 
             <div className="space-y-2 col-span-2">
               <Label htmlFor="address">Address *</Label>
-              <Input
-                id="address"
+              <AddressAutocomplete
                 value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
+                onChange={(address) => setFormData({ ...formData, address })}
+                onSelect={(address, lat, lng) => {
+                  setFormData({
+                    ...formData,
+                    address,
+                    latitude: lat.toString(),
+                    longitude: lng.toString(),
+                  });
+                  setUseManualCoords(true);
+                }}
                 required
-                placeholder="e.g., 4141 Troost Ave, Kansas City, MO 64110"
+                placeholder="Start typing an address..."
                 data-testid="input-shop-address"
               />
               <p className="text-xs text-muted-foreground">
-                {useManualCoords
-                  ? "Using manually entered coordinates"
-                  : "Coordinates will be automatically determined from the address"}
+                {formData.latitude && formData.longitude
+                  ? "✓ Coordinates auto-filled from selected address"
+                  : useManualCoords
+                    ? "Using manually entered coordinates"
+                    : "Select an address from suggestions or enter coordinates manually"}
               </p>
             </div>
 
