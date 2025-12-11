@@ -78,7 +78,9 @@ export default function Home() {
       await fetchCoffeeShops();
     } catch (err) {
       console.error("Error deleting coffee shop:", err);
-      alert(err instanceof Error ? err.message : "Failed to delete coffee shop");
+      alert(
+        err instanceof Error ? err.message : "Failed to delete coffee shop"
+      );
       throw err;
     }
   };
