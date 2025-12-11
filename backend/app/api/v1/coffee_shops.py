@@ -74,7 +74,7 @@ async def create_coffee_shop(
     return db_shop
 
 @router.put("/coffee-shops/{shop_id}", response_model=CoffeeShopSchema)
-def update_coffee_shop(
+async def update_coffee_shop(
     shop_id: int,
     shop: CoffeeShopUpdate,
     db: Session = Depends(get_db),
@@ -82,6 +82,7 @@ def update_coffee_shop(
 ):
     """
     Update a coffee shop. Requires admin authentication.
+    If address is updated without new coordinates, they will be geocoded from the new address.
     """
     db_shop = db.query(CoffeeShop).filter(CoffeeShop.id == shop_id).first()
     if db_shop is None:
@@ -89,6 +90,19 @@ def update_coffee_shop(
     
     # Update only provided fields
     update_data = shop.model_dump(exclude_unset=True)
+    
+    # If address changed but coordinates weren't provided, geocode the new address
+    if "address" in update_data and update_data["address"] != db_shop.address:
+        if "latitude" not in update_data or "longitude" not in update_data:
+            coordinates = await geocode_address(update_data["address"])
+            if coordinates:
+                update_data["latitude"], update_data["longitude"] = coordinates
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Could not geocode address: {update_data['address']}. Please provide latitude and longitude manually."
+                )
+    
     for field, value in update_data.items():
         setattr(db_shop, field, value)
     
