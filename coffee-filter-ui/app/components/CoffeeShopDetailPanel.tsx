@@ -139,11 +139,11 @@ export function CoffeeShopDetailPanel({
                 />
                 <span className="font-medium">Accessibility</span>
               </div>
-              <p className="text-sm text-muted-foreground ">
+              <p className="text-sm text-muted-foreground pl-6">
                 {shop.accessibility ? (
                   <span className="flex items-center gap-2">
-                    {" "}
-                    <Check className="h-4 w-4 text-primary" /> Wheelchair ramp
+                    <Check className="h-4 w-4 text-primary" />
+                    Wheelchair ramp
                   </span>
                 ) : (
                   "Not available"
