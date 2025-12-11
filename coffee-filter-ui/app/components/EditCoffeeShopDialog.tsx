@@ -217,6 +217,7 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, pourOver: checked })
                   }
                   data-testid="edit-switch-pour-over"
+                  required
                 />
               </div>
 
@@ -229,6 +230,7 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, accessibility: checked })
                   }
                   data-testid="edit-switch-accessibility"
+                  required
                 />
               </div>
 
@@ -243,6 +245,7 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, hasWifi: checked })
                   }
                   data-testid="edit-switch-wifi"
+                  required
                 />
               </div>
             </div>
@@ -257,6 +260,7 @@ export function EditCoffeeShopDialog({
                 }
                 placeholder="e.g., 7am - 6pm daily"
                 data-testid="edit-input-hours"
+                required
               />
             </div>
 
@@ -283,6 +287,7 @@ export function EditCoffeeShopDialog({
                         setFormData({ ...formData, daysOpen: newDays });
                       }}
                       data-testid={`edit-checkbox-${day.toLowerCase()}`}
+                      required
                     />
                     <Label
                       htmlFor={`edit-${day}`}
@@ -306,6 +311,7 @@ export function EditCoffeeShopDialog({
                 }
                 placeholder="https://example.com"
                 data-testid="edit-input-website"
+                required
               />
             </div>
 
@@ -333,6 +339,7 @@ export function EditCoffeeShopDialog({
                 placeholder="Tell us about this coffee shop..."
                 rows={3}
                 data-testid="edit-input-description"
+                required
               />
             </div>
           </div>
