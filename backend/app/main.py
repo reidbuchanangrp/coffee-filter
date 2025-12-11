@@ -13,34 +13,32 @@ Base.metadata.create_all(bind=engine)
 
 
 def create_default_admin():
-    """Create default admin user if none exists."""
+    """Create or update admin user from environment variables."""
     db = SessionLocal()
     try:
-        # Check if any admin exists
-        admin_exists = db.query(User).filter(User.is_admin == True).first()
-        if not admin_exists:
-            # Get credentials from environment or use defaults
-            admin_username = os.getenv("ADMIN_USERNAME", "admin")
-            admin_password = os.getenv("ADMIN_PASSWORD", "!QA@WS3ed")
-            
-            # Check if user with this username exists
-            existing_user = db.query(User).filter(User.username == admin_username).first()
-            if existing_user:
-                # Make existing user an admin
-                existing_user.is_admin = True
-                db.commit()
-                print(f"Updated existing user '{admin_username}' to admin")
-            else:
-                # Create new admin user
-                hashed_password = get_password_hash(admin_password)
-                admin_user = User(
-                    username=admin_username,
-                    hashed_password=hashed_password,
-                    is_admin=True
-                )
-                db.add(admin_user)
-                db.commit()
-                print(f"Created admin user: {admin_username}")
+        # Get credentials from environment or use defaults
+        admin_username = os.getenv("ADMIN_USERNAME", "admin")
+        admin_password = os.getenv("ADMIN_PASSWORD", "!QA@WS3ed")
+        
+        # Check if user with this username exists
+        existing_user = db.query(User).filter(User.username == admin_username).first()
+        if existing_user:
+            # Update password and ensure admin status
+            existing_user.hashed_password = get_password_hash(admin_password)
+            existing_user.is_admin = True
+            db.commit()
+            print(f"Updated admin user: {admin_username}")
+        else:
+            # Create new admin user
+            hashed_password = get_password_hash(admin_password)
+            admin_user = User(
+                username=admin_username,
+                hashed_password=hashed_password,
+                is_admin=True
+            )
+            db.add(admin_user)
+            db.commit()
+            print(f"Created admin user: {admin_username}")
     except Exception as e:
         print(f"Error creating admin user: {e}")
     finally:
