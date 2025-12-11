@@ -203,6 +203,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, pourOver: checked })
                   }
                   data-testid="switch-pour-over"
+                  required
                 />
               </div>
 
@@ -215,6 +216,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, accessibility: checked })
                   }
                   data-testid="switch-accessibility"
+                  required
                 />
               </div>
 
@@ -229,6 +231,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                     setFormData({ ...formData, hasWifi: checked })
                   }
                   data-testid="switch-wifi"
+                  required
                 />
               </div>
             </div>
@@ -243,6 +246,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 }
                 placeholder="e.g., 7am - 6pm daily"
                 data-testid="input-hours"
+                required
               />
             </div>
 
@@ -269,6 +273,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                         setFormData({ ...formData, daysOpen: newDays });
                       }}
                       data-testid={`checkbox-${day.toLowerCase()}`}
+                      required
                     />
                     <Label
                       htmlFor={day}
@@ -292,6 +297,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 }
                 placeholder="https://example.com"
                 data-testid="input-website"
+                required
               />
             </div>
 
@@ -319,6 +325,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
                 placeholder="Tell us about this coffee shop..."
                 rows={3}
                 data-testid="input-description"
+                required
               />
             </div>
           </div>
