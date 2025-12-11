@@ -2,10 +2,13 @@ import { Coffee } from "lucide-react";
 import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
-import { getCoffeeShops, deleteCoffeeShop } from "../lib/api";
+import { getCoffeeShops, deleteCoffeeShop, updateCoffeeShop } from "../lib/api";
 import { useEffect, useState } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
+import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
+import { LoginDialog } from "../components/LoginDialog";
+import { useAuth } from "../lib/AuthContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,10 +18,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const { isAdmin } = useAuth();
   const [selectedShop, setSelectedShop] = useState<CoffeeShop | null>(null);
   const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const fetchCoffeeShops = async () => {
     try {
@@ -85,6 +90,23 @@ export default function Home() {
     }
   };
 
+  const handleUpdateCoffeeShop = async (
+    id: number,
+    data: Partial<CoffeeShop>
+  ) => {
+    try {
+      const updatedShop = await updateCoffeeShop(id, data);
+      setSelectedShop(updatedShop);
+      await fetchCoffeeShops();
+    } catch (err) {
+      console.error("Error updating coffee shop:", err);
+      alert(
+        err instanceof Error ? err.message : "Failed to update coffee shop"
+      );
+      throw err;
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col">
       <header className="flex items-center justify-between px-6 py-3 border-b bg-primary">
@@ -93,8 +115,8 @@ export default function Home() {
           <h1 className="text-xl font-semibold font-serif">FilterCoffee</h1>
         </div>
         <div className="flex items-center gap-3">
-          <AddCoffeeShopDialog onAdd={handleAddCoffeeShop} />
-          {/* <ThemeToggle /> */}
+          {isAdmin && <AddCoffeeShopDialog onAdd={handleAddCoffeeShop} />}
+          <LoginDialog />
         </div>
       </header>
       <main className="flex-1 relative overflow-hidden">
@@ -114,11 +136,22 @@ export default function Home() {
           onMarkerClick={setSelectedShop}
         />
         {selectedShop && (
-          <CoffeeShopDetailPanel
-            shop={selectedShop}
-            onClose={() => setSelectedShop(null)}
-            onDelete={handleDeleteCoffeeShop}
-          />
+          <>
+            <CoffeeShopDetailPanel
+              shop={selectedShop}
+              onClose={() => setSelectedShop(null)}
+              onDelete={isAdmin ? handleDeleteCoffeeShop : undefined}
+              onEdit={isAdmin ? () => setIsEditDialogOpen(true) : undefined}
+            />
+            {isAdmin && (
+              <EditCoffeeShopDialog
+                shop={selectedShop}
+                open={isEditDialogOpen}
+                onOpenChange={setIsEditDialogOpen}
+                onSave={handleUpdateCoffeeShop}
+              />
+            )}
+          </>
         )}
       </main>
     </div>

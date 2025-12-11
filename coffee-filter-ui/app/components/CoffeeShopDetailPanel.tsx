@@ -12,6 +12,7 @@ import {
   Accessibility,
   Check,
   Trash2,
+  Pencil,
 } from "lucide-react";
 import { useState } from "react";
 import { SiInstagram } from "react-icons/si";
@@ -24,12 +25,22 @@ interface CoffeeShopDetailPanelProps {
   shop: CoffeeShop;
   onClose: () => void;
   onDelete?: (id: number) => void;
+  onEdit?: () => void;
+}
+
+// Ensure URL has protocol prefix
+function ensureHttps(url: string): string {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `https://${url}`;
 }
 
 export function CoffeeShopDetailPanel({
   shop,
   onClose,
   onDelete,
+  onEdit,
 }: CoffeeShopDetailPanelProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -52,14 +63,26 @@ export function CoffeeShopDetailPanel({
     >
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b p-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Coffee Shop Details</h2>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          data-testid="button-close-panel"
-        >
-          <X className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-1">
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onEdit}
+              data-testid="button-edit-shop"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            data-testid="button-close-panel"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
 
       <div className="p-6 space-y-6">
@@ -187,7 +210,7 @@ export function CoffeeShopDetailPanel({
                   data-testid="link-website"
                 >
                   <a
-                    href={shop.website}
+                    href={ensureHttps(shop.website)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -204,7 +227,7 @@ export function CoffeeShopDetailPanel({
                   data-testid="link-instagram"
                 >
                   <a
-                    href={shop.instagram}
+                    href={ensureHttps(shop.instagram)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

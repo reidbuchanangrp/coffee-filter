@@ -3,6 +3,24 @@ import type { CoffeeShop } from "./types";
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
+// Helper to safely get token (SSR-safe)
+function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+}
+
+// Helper to get auth headers
+function getAuthHeaders(): HeadersInit {
+  const token = getToken();
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 // Transform backend snake_case to frontend camelCase
 function transformToFrontend(backendShop: any): CoffeeShop {
   return {
@@ -100,9 +118,7 @@ export async function createCoffeeShop(
 
     const response = await fetch(`${API_BASE_URL}/coffee-shops`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(shopData),
     });
 
@@ -131,9 +147,7 @@ export async function updateCoffeeShop(
 
     const response = await fetch(`${API_BASE_URL}/coffee-shops/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(shopData),
     });
 
@@ -151,8 +165,15 @@ export async function updateCoffeeShop(
 
 export async function deleteCoffeeShop(id: number): Promise<void> {
   try {
+    const token = getToken();
+    const headers: HeadersInit = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE_URL}/coffee-shops/${id}`, {
       method: "DELETE",
+      headers,
     });
 
     if (!response.ok) {
