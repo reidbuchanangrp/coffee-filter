@@ -25,7 +25,7 @@ curl -X POST http://localhost:8000/api/v1/coffee-shops \
     "address": "123 Main St, Kansas City, MO",
     "latitude": 39.0997,
     "longitude": -94.5786,
-    "image": "https://via.placeholder.com/150",
+    "image": "https://placehold.co/150x150/e2e8f0/64748b?text=☕",
     "accessibility": true,
     "has_wifi": true,
     "description": "A great coffee shop",

@@ -29,7 +29,8 @@ function transformToFrontend(backendShop: any): CoffeeShop {
     address: backendShop.address,
     latitude: backendShop.latitude,
     longitude: backendShop.longitude,
-    image: backendShop.image || "https://via.placeholder.com/150",
+    image:
+      backendShop.image || "https://placehold.co/150x150/e2e8f0/64748b?text=☕",
     accessibility: backendShop.accessibility,
     hasWifi: backendShop.has_wifi,
     description: backendShop.description,
@@ -103,7 +104,7 @@ export async function createCoffeeShop(
     // Convert to backend format - don't include lat/lng if not provided (backend will geocode)
     const shopData: any = {
       ...transformToBackend(shop),
-      image: shop.image || "https://via.placeholder.com/150",
+      image: shop.image || "https://placehold.co/150x150/e2e8f0/64748b?text=☕",
     };
 
     // Only include latitude/longitude if explicitly provided

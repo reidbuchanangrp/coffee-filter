@@ -85,7 +85,7 @@ shops = [
         address="4141 Troost Ave, Kansas City, MO 64110",
         latitude=39.0544,
         longitude=-94.5723,
-        image="https://via.placeholder.com/150",
+        image="https://placehold.co/150x150/e2e8f0/64748b?text=☕",
         accessibility=True,
         has_wifi=True,
         machine="La Marzocco",

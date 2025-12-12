@@ -33,7 +33,7 @@ class CoffeeShopCreate(BaseModel):
     address: str
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    image: str = "https://via.placeholder.com/150"
+    image: str = "https://placehold.co/150x150/e2e8f0/64748b?text=☕"
     accessibility: bool = False
     has_wifi: bool = False
     description: str = ""
