@@ -10,6 +10,25 @@ from app.schemas.coffee_shop import CoffeeShop as CoffeeShopSchema, CoffeeShopCr
 
 router = APIRouter()
 
+
+def serialize_weekly_hours(weekly_hours):
+    """Convert Pydantic DayHours objects to plain dicts for JSON storage."""
+    if weekly_hours is None:
+        return {}
+    if isinstance(weekly_hours, dict):
+        result = {}
+        for day, hours in weekly_hours.items():
+            if hasattr(hours, 'model_dump'):
+                result[day] = hours.model_dump()
+            elif hasattr(hours, 'dict'):
+                result[day] = hours.dict()
+            elif isinstance(hours, dict):
+                result[day] = hours
+            else:
+                result[day] = {"open": str(hours.open), "close": str(hours.close)}
+        return result
+    return weekly_hours
+
 @router.get("/coffee-shops", response_model=List[CoffeeShopSchema])
 def get_coffee_shops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
@@ -62,7 +81,7 @@ async def create_coffee_shop(
         has_wifi=shop.has_wifi,
         description=shop.description,
         machine=shop.machine,
-        weekly_hours=shop.weekly_hours,
+        weekly_hours=serialize_weekly_hours(shop.weekly_hours),
         pour_over=shop.pour_over,
         website=shop.website,
         instagram=shop.instagram
@@ -89,6 +108,10 @@ async def update_coffee_shop(
     
     # Update only provided fields
     update_data = shop.model_dump(exclude_unset=True)
+    
+    # Serialize weekly_hours if present
+    if "weekly_hours" in update_data and update_data["weekly_hours"] is not None:
+        update_data["weekly_hours"] = serialize_weekly_hours(update_data["weekly_hours"])
     
     # If address changed but coordinates weren't provided, geocode the new address
     if "address" in update_data and update_data["address"] != db_shop.address:
