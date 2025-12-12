@@ -34,8 +34,7 @@ function transformToFrontend(backendShop: any): CoffeeShop {
     hasWifi: backendShop.has_wifi,
     description: backendShop.description,
     machine: backendShop.machine,
-    hours: backendShop.hours,
-    daysOpen: backendShop.days_open,
+    weeklyHours: backendShop.weekly_hours || {},
     pourOver: backendShop.pour_over,
     website: backendShop.website,
     instagram: backendShop.instagram,
@@ -59,9 +58,8 @@ function transformToBackend(frontendShop: Partial<CoffeeShop>): any {
   if (frontendShop.description !== undefined)
     result.description = frontendShop.description;
   if (frontendShop.machine !== undefined) result.machine = frontendShop.machine;
-  if (frontendShop.hours !== undefined) result.hours = frontendShop.hours;
-  if (frontendShop.daysOpen !== undefined)
-    result.days_open = frontendShop.daysOpen;
+  if (frontendShop.weeklyHours !== undefined)
+    result.weekly_hours = frontendShop.weeklyHours;
   if (frontendShop.pourOver !== undefined)
     result.pour_over = frontendShop.pourOver;
   if (frontendShop.website !== undefined) result.website = frontendShop.website;

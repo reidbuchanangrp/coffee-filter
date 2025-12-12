@@ -1,3 +1,18 @@
+export interface DayHours {
+  open: string;
+  close: string;
+}
+
+export interface WeeklyHours {
+  monday?: DayHours;
+  tuesday?: DayHours;
+  wednesday?: DayHours;
+  thursday?: DayHours;
+  friday?: DayHours;
+  saturday?: DayHours;
+  sunday?: DayHours;
+}
+
 export interface CoffeeShop {
   id: number;
   name: string;
@@ -9,8 +24,7 @@ export interface CoffeeShop {
   hasWifi: boolean;
   description: string;
   machine: string;
-  hours: string;
-  daysOpen: string[];
+  weeklyHours: WeeklyHours;
   pourOver: boolean;
   website?: string;
   instagram?: string;

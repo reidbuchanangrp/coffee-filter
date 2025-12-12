@@ -1,25 +1,23 @@
 import {
   X,
   Wifi,
-  Zap,
-  Users,
   Coffee,
   Cog,
   Clock,
   MapPin,
   Globe,
-  Calendar,
   Accessibility,
   Check,
   Trash2,
   Pencil,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SiInstagram } from "react-icons/si";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import type { CoffeeShop } from "../lib/types";
+import { isCurrentlyOpen } from "./WeeklyHoursInput";
 
 interface CoffeeShopDetailPanelProps {
   shop: CoffeeShop;
@@ -44,6 +42,11 @@ export function CoffeeShopDetailPanel({
 }: CoffeeShopDetailPanelProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const isOpen = useMemo(
+    () => isCurrentlyOpen(shop.weeklyHours || {}),
+    [shop.weeklyHours]
+  );
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -87,13 +90,24 @@ export function CoffeeShopDetailPanel({
 
       <div className="p-6 space-y-6">
         <div>
-          <div className="flex items-start justify-between gap-3 mb-2">
+          <div className="flex items-center justify-between gap-3 mb-2">
             <h1
               className="text-2xl font-semibold font-serif"
               data-testid="text-shop-name"
             >
               {shop.name}
             </h1>
+            <Badge
+              variant={isOpen ? "default" : "secondary"}
+              className={`shrink-0 ${
+                isOpen
+                  ? "bg-green-500 hover:bg-green-500 animate-pulse"
+                  : "bg-muted text-muted-foreground"
+              }`}
+              data-testid="badge-open-status"
+            >
+              {isOpen ? "Open" : "Closed"}
+            </Badge>
           </div>
           <p className="text-muted-foreground flex items-start gap-2">
             <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
@@ -163,37 +177,44 @@ export function CoffeeShopDetailPanel({
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-sm font-medium mb-2">
+          <div className="flex items-center gap-2 text-sm font-medium mb-3">
             <Clock className="h-4 w-4 text-primary" />
             <span>Hours</span>
           </div>
-          <p className="text-sm text-muted-foreground pl-6">{shop.hours}</p>
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2 text-sm font-medium mb-2">
-            <Calendar className="h-4 w-4 text-primary" />
-            <span>Days Open</span>
-          </div>
-          <div className="flex flex-wrap gap-2 pl-6">
-            {[...shop.daysOpen]
-              .sort((a, b) => {
-                const dayOrder = [
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday",
-                ];
-                return dayOrder.indexOf(a) - dayOrder.indexOf(b);
-              })
-              .map((day) => (
-                <Badge key={day} variant="secondary" className="text-xs">
-                  {day.slice(0, 3)}
-                </Badge>
-              ))}
+          <div className="space-y-1 pl-6">
+            {[
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday",
+            ].map((day) => {
+              const dayHours =
+                shop.weeklyHours?.[day as keyof typeof shop.weeklyHours];
+              const isToday =
+                new Date()
+                  .toLocaleDateString("en-US", { weekday: "long" })
+                  .toLowerCase() === day;
+              return (
+                <div
+                  key={day}
+                  className={`flex justify-between text-sm ${
+                    isToday
+                      ? "font-medium text-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="capitalize">{day.slice(0, 3)}</span>
+                  <span>
+                    {dayHours
+                      ? `${dayHours.open} - ${dayHours.close}`
+                      : "Closed"}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

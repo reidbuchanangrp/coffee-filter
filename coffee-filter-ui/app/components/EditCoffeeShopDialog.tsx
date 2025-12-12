@@ -9,9 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
 import { AddressAutocomplete } from "./AddressAutocomplete";
+import { WeeklyHoursInput, type WeeklyHours } from "./WeeklyHoursInput";
 import type { CoffeeShop } from "../lib/types";
 
 interface EditCoffeeShopDialogProps {
@@ -61,8 +61,7 @@ export function EditCoffeeShopDialog({
     accessibility: false,
     hasWifi: false,
     description: "",
-    hours: "",
-    daysOpen: [] as string[],
+    weeklyHours: {} as WeeklyHours,
     website: "",
     instagram: "",
     pourOver: false,
@@ -84,8 +83,7 @@ export function EditCoffeeShopDialog({
         accessibility: shop.accessibility,
         hasWifi: shop.hasWifi,
         description: shop.description || "",
-        hours: shop.hours || "",
-        daysOpen: shop.daysOpen || [],
+        weeklyHours: shop.weeklyHours || {},
         website: shop.website || "",
         instagram: extractInstagramUsername(shop.instagram || ""),
         pourOver: shop.pourOver,
@@ -109,8 +107,7 @@ export function EditCoffeeShopDialog({
         accessibility: formData.accessibility,
         hasWifi: formData.hasWifi,
         description: formData.description,
-        hours: formData.hours,
-        daysOpen: formData.daysOpen,
+        weeklyHours: formData.weeklyHours,
         website: formData.website || undefined,
         instagram: formatInstagramUrl(formData.instagram),
         pourOver: formData.pourOver,
@@ -285,53 +282,13 @@ export function EditCoffeeShopDialog({
               </div>
             </div>
 
-            <div className="space-y-2 col-span-2">
-              <Label htmlFor="edit-hours">Hours</Label>
-              <Input
-                id="edit-hours"
-                value={formData.hours}
-                onChange={(e) =>
-                  setFormData({ ...formData, hours: e.target.value })
+            <div className="col-span-2">
+              <WeeklyHoursInput
+                value={formData.weeklyHours}
+                onChange={(weeklyHours) =>
+                  setFormData({ ...formData, weeklyHours })
                 }
-                placeholder="e.g., 7am - 6pm daily"
-                data-testid="edit-input-hours"
-                required
               />
-            </div>
-
-            <div className="space-y-2 col-span-2">
-              <Label>Days Open</Label>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday",
-                ].map((day) => (
-                  <div key={day} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`edit-${day}`}
-                      checked={formData.daysOpen.includes(day)}
-                      onCheckedChange={(checked: boolean) => {
-                        const newDays = checked
-                          ? [...formData.daysOpen, day]
-                          : formData.daysOpen.filter((d) => d !== day);
-                        setFormData({ ...formData, daysOpen: newDays });
-                      }}
-                      data-testid={`edit-checkbox-${day.toLowerCase()}`}
-                    />
-                    <Label
-                      htmlFor={`edit-${day}`}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      {day}
-                    </Label>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="space-y-2 col-span-2">

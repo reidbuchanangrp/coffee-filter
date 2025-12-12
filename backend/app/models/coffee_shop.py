@@ -14,8 +14,7 @@ class CoffeeShop(Base):
     has_wifi = Column(Boolean, default=False)
     description = Column(String)
     machine = Column(String)
-    hours = Column(String)
-    days_open = Column(JSON)  # Store array as JSON
+    weekly_hours = Column(JSON)  # Store per-day hours as JSON: {"monday": {"open": "7am", "close": "5pm"}, ...}
     pour_over = Column(Boolean, default=False)
     website = Column(String, nullable=True)
     instagram = Column(String, nullable=True)

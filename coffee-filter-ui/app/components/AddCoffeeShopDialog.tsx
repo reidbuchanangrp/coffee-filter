@@ -9,18 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { useState, useRef } from "react";
 import { AddressAutocomplete } from "./AddressAutocomplete";
+import { WeeklyHoursInput, type WeeklyHours } from "./WeeklyHoursInput";
 
 interface AddCoffeeShopDialogProps {
   onAdd?: (data: any) => Promise<void>;
@@ -50,8 +43,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     accessibility: false,
     hasWifi: false,
     description: "",
-    hours: "",
-    daysOpen: [] as string[],
+    weeklyHours: {} as WeeklyHours,
     website: "",
     instagram: "",
     pourOver: false,
@@ -94,8 +86,7 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
         accessibility: false,
         hasWifi: false,
         description: "",
-        hours: "",
-        daysOpen: [],
+        weeklyHours: {},
         website: "",
         instagram: "",
         pourOver: false,
@@ -277,53 +268,13 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
               </div>
             </div>
 
-            <div className="space-y-2 col-span-2">
-              <Label htmlFor="hours">Hours</Label>
-              <Input
-                id="hours"
-                value={formData.hours}
-                onChange={(e) =>
-                  setFormData({ ...formData, hours: e.target.value })
+            <div className="col-span-2">
+              <WeeklyHoursInput
+                value={formData.weeklyHours}
+                onChange={(weeklyHours) =>
+                  setFormData({ ...formData, weeklyHours })
                 }
-                placeholder="e.g., 7am - 6pm daily"
-                data-testid="input-hours"
-                required
               />
-            </div>
-
-            <div className="space-y-2 col-span-2">
-              <Label>Days Open</Label>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday",
-                ].map((day) => (
-                  <div key={day} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={day}
-                      checked={formData.daysOpen.includes(day)}
-                      onCheckedChange={(checked: boolean) => {
-                        const newDays = checked
-                          ? [...formData.daysOpen, day]
-                          : formData.daysOpen.filter((d) => d !== day);
-                        setFormData({ ...formData, daysOpen: newDays });
-                      }}
-                      data-testid={`checkbox-${day.toLowerCase()}`}
-                    />
-                    <Label
-                      htmlFor={day}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      {day}
-                    </Label>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="space-y-2 col-span-2">

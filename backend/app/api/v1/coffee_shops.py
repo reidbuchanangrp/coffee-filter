@@ -62,8 +62,7 @@ async def create_coffee_shop(
         has_wifi=shop.has_wifi,
         description=shop.description,
         machine=shop.machine,
-        hours=shop.hours,
-        days_open=shop.days_open,
+        weekly_hours=shop.weekly_hours,
         pour_over=shop.pour_over,
         website=shop.website,
         instagram=shop.instagram

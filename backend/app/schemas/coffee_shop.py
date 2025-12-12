@@ -1,5 +1,13 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional, List
+from typing import Optional, Dict
+
+class DayHours(BaseModel):
+    """Hours for a single day"""
+    open: str
+    close: str
+
+# WeeklyHours is a dict with day names as keys
+WeeklyHours = Dict[str, DayHours]
 
 class CoffeeShopBase(BaseModel):
     """Base schema matching the database model (snake_case)"""
@@ -12,8 +20,7 @@ class CoffeeShopBase(BaseModel):
     has_wifi: bool = False
     description: str
     machine: str
-    hours: str
-    days_open: List[str]
+    weekly_hours: WeeklyHours
     pour_over: bool = False
     website: Optional[str] = None
     instagram: Optional[str] = None
@@ -31,8 +38,7 @@ class CoffeeShopCreate(BaseModel):
     has_wifi: bool = False
     description: str = ""
     machine: str = ""
-    hours: str = ""
-    days_open: List[str] = []
+    weekly_hours: WeeklyHours = {}
     pour_over: bool = False
     website: Optional[str] = None
     instagram: Optional[str] = None
@@ -50,8 +56,7 @@ class CoffeeShopUpdate(BaseModel):
     has_wifi: Optional[bool] = None
     description: Optional[str] = None
     machine: Optional[str] = None
-    hours: Optional[str] = None
-    days_open: Optional[List[str]] = None
+    weekly_hours: Optional[WeeklyHours] = None
     pour_over: Optional[bool] = None
     website: Optional[str] = None
     instagram: Optional[str] = None

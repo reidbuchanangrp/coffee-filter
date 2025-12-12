@@ -41,16 +41,16 @@ export function CoffeeShopCard({ shop, onViewDetails }: CoffeeShopCardProps) {
               <span className="truncate">{shop.address}</span>
             </p>
           </div>
-          <Badge variant="secondary" className="shrink-0">
+          {/* <Badge variant="secondary" className="shrink-0">
             {shop.hours}
-          </Badge>
+          </Badge> */}
         </div>
       </CardHeader>
       <CardContent className="space-y-3 pb-3">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="text-xs">
+          {/* <Badge variant="outline" className="text-xs">
             {shop.daysOpen.join(", ")}
-          </Badge>
+          </Badge> */}
           <Badge variant="outline" className="text-xs">
             {shop.description}
           </Badge>
