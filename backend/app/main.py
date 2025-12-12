@@ -67,6 +67,9 @@ cors_origins.extend([
     "http://localhost:5174",
     "http://localhost:3000",
     "http://localhost:5175",
+    # Production frontend
+    "https://www.coffee-filter.us",
+    "https://coffee-filter.us",
 ])
 
 app.add_middleware(
