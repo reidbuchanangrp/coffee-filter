@@ -92,7 +92,6 @@ export function WeeklyHoursInput({ value, onChange }: WeeklyHoursInputProps) {
   const applyToAll = (sourceDay: DayKey) => {
     const sourceHours = value[sourceDay];
     if (!sourceHours) return;
-    console.log(sourceHours);
     const newValue: WeeklyHours = {};
     DAYS.forEach((day) => {
       newValue[day.key] = { ...sourceHours };
