@@ -12,8 +12,29 @@ import { useAuth } from "../lib/AuthContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "FilterCoffee" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "CoffeeFilter - Find Great Coffee Shops Near You" },
+    {
+      name: "description",
+      content:
+        "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours. Find your perfect spot for great coffee.",
+    },
+    { property: "og:title", content: "CoffeeFilter - Find Great Coffee Shops" },
+    {
+      property: "og:description",
+      content:
+        "Discover local coffee shops with detailed info on amenities, hours, and more.",
+    },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "CoffeeFilter - Find Great Coffee Shops",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours.",
+    },
   ];
 }
 
@@ -106,7 +127,7 @@ export default function Home() {
       <header className="flex items-center justify-between px-6 py-3 border-b bg-primary">
         <div className="flex items-center gap-2">
           <Coffee className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-semibold font-serif">FilterCoffee</h1>
+          <h1 className="text-xl font-semibold font-serif">CoffeeFilter</h1>
         </div>
         <div className="flex items-center gap-3">
           {isAdmin && <AddCoffeeShopDialog onAdd={handleAddCoffeeShop} />}
