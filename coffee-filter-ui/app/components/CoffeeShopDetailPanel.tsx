@@ -254,9 +254,19 @@ export function CoffeeShopDetailPanel({
         </div>
 
         <div className="flex gap-3">
-          <Button className="flex-1" data-testid="button-get-directions">
-            <MapPin className="h-4 w-4 mr-2" />
-            Get Directions
+          <Button
+            className="flex-1"
+            asChild
+            data-testid="button-get-directions"
+          >
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${shop.latitude},${shop.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MapPin className="h-4 w-4 mr-2" />
+              Get Directions
+            </a>
           </Button>
         </div>
 
