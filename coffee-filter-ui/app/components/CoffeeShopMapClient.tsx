@@ -6,6 +6,7 @@ import L from "leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Coffee } from "lucide-react";
 import { useEffect, useState } from "react";
+import { isCurrentlyOpen } from "./WeeklyHoursInput";
 
 const createCoffeeIcon = (isSelected: boolean) => {
   const iconMarkup = renderToStaticMarkup(
@@ -34,7 +35,7 @@ const createCoffeeIcon = (isSelected: boolean) => {
 };
 
 // Custom cluster icon that shows count in a circle
-const createClusterIcon = (cluster: L.MarkerCluster) => {
+const createClusterIcon = (cluster: { getChildCount: () => number }) => {
   const count = cluster.getChildCount();
   return L.divIcon({
     html: `<div style="
@@ -135,7 +136,29 @@ export function CoffeeShopMapClient({
           >
             <Popup>
               <div>
-                <h2 className="text-md font-semibold">{shop?.name}</h2>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-md font-semibold">{shop?.name}</h2>
+                  <span
+                    style={{
+                      display: "inline-block",
+
+                      padding: "2px 8px",
+                      borderRadius: "9999px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                      backgroundColor: isCurrentlyOpen(shop.weeklyHours || {})
+                        ? "#dcfce7"
+                        : "#f3f4f6",
+                      color: isCurrentlyOpen(shop.weeklyHours || {})
+                        ? "#166534"
+                        : "#6b7280",
+                    }}
+                  >
+                    {isCurrentlyOpen(shop.weeklyHours || {})
+                      ? "Open"
+                      : "Closed"}
+                  </span>
+                </div>
                 <p>{shop.address}</p>
               </div>
             </Popup>
