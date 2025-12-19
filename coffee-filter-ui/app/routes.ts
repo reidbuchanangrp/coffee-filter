@@ -5,4 +5,7 @@ import {
   layout,
 } from "@react-router/dev/routes";
 
-export default [index("routes/home.tsx")] satisfies RouteConfig; // initial route
+export default [
+  index("routes/home.tsx"),
+  route("about", "routes/about.tsx"),
+] satisfies RouteConfig;

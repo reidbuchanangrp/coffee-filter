@@ -10,6 +10,7 @@ import {
   Check,
   Trash2,
   Pencil,
+  Copy,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { SiInstagram } from "react-icons/si";
@@ -24,6 +25,7 @@ interface CoffeeShopDetailPanelProps {
   onClose: () => void;
   onDelete?: (id: number) => void;
   onEdit?: () => void;
+  onAddLocation?: () => void;
 }
 
 // Ensure URL has protocol prefix
@@ -39,6 +41,7 @@ export function CoffeeShopDetailPanel({
   onClose,
   onDelete,
   onEdit,
+  onAddLocation,
 }: CoffeeShopDetailPanelProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -67,6 +70,17 @@ export function CoffeeShopDetailPanel({
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b p-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Coffee Shop Details</h2>
         <div className="flex items-center gap-1">
+          {onAddLocation && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onAddLocation}
+              title="Add another location"
+              data-testid="button-add-location"
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+          )}
           {onEdit && (
             <Button
               variant="ghost"
@@ -159,7 +173,7 @@ export function CoffeeShopDetailPanel({
                 {shop.accessibility ? (
                   <span className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-primary" />
-                    Wheelchair ramp
+                    Wheelchair
                   </span>
                 ) : (
                   "Not available"

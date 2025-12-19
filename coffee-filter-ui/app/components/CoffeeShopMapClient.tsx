@@ -71,12 +71,14 @@ interface CoffeeShopMapClientProps {
   coffeeShops: CoffeeShop[];
   selectedShopId: number;
   onMarkerClick: (shop: CoffeeShop) => void;
+  searchCenter?: [number, number] | null;
 }
 
 export function CoffeeShopMapClient({
   coffeeShops,
   selectedShopId,
   onMarkerClick,
+  searchCenter,
 }: CoffeeShopMapClientProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
@@ -97,7 +99,7 @@ export function CoffeeShopMapClient({
       );
     }
   }, []);
-  // Priority: user location > first coffee shop > default (Kansas City)
+  // Priority: search center > user location > first coffee shop > default (Kansas City)
   const center: [number, number] = userLocation
     ? userLocation
     : coffeeShops.length > 0
@@ -112,7 +114,8 @@ export function CoffeeShopMapClient({
       scrollWheelZoom={true}
       zoomControl={true}
     >
-      {userLocation && <RecenterMap center={userLocation} />}
+      {searchCenter && <RecenterMap center={searchCenter} />}
+      {!searchCenter && userLocation && <RecenterMap center={userLocation} />}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"

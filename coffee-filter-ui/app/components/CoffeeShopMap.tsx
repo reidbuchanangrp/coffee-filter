@@ -5,17 +5,20 @@ interface CoffeeShopMapProps {
   coffeeShops: CoffeeShop[];
   selectedShopId: number;
   onMarkerClick: (shop: CoffeeShop) => void;
+  searchCenter?: [number, number] | null;
 }
 
 export function CoffeeShopMap({
   coffeeShops,
   selectedShopId,
   onMarkerClick,
+  searchCenter,
 }: CoffeeShopMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<{
     coffeeShops: CoffeeShop[];
     selectedShopId: number;
     onMarkerClick: (shop: CoffeeShop) => void;
+    searchCenter?: [number, number] | null;
   }> | null>(null);
 
   useEffect(() => {
@@ -38,6 +41,7 @@ export function CoffeeShopMap({
       coffeeShops={coffeeShops}
       selectedShopId={selectedShopId}
       onMarkerClick={onMarkerClick}
+      searchCenter={searchCenter}
     />
   );
 }

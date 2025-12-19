@@ -11,12 +11,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Plus } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AddressAutocomplete } from "./AddressAutocomplete";
 import { WeeklyHoursInput, type WeeklyHours } from "./WeeklyHoursInput";
 
+interface InitialShopData {
+  name?: string;
+  description?: string;
+  machine?: string;
+  website?: string;
+  instagram?: string;
+  image?: string;
+  accessibility?: boolean;
+  hasWifi?: boolean;
+  pourOver?: boolean;
+  weeklyHours?: WeeklyHours;
+}
+
 interface AddCoffeeShopDialogProps {
   onAdd?: (data: any) => Promise<void>;
+  /** Pre-fill form with data (useful for "Add Another Location") */
+  initialData?: InitialShopData;
+  /** Controlled open state */
+  open?: boolean;
+  /** Callback when open state changes */
+  onOpenChange?: (open: boolean) => void;
+  /** Hide the trigger button (for controlled mode) */
+  hideTrigger?: boolean;
 }
 
 // Convert Instagram username to full URL
@@ -31,27 +52,57 @@ function formatInstagramUrl(input: string): string | undefined {
   return username ? `https://instagram.com/${username}` : undefined;
 }
 
-export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    latitude: "",
-    longitude: "",
-    image: "",
-    machine: "",
-    accessibility: false,
-    hasWifi: false,
-    description: "",
-    weeklyHours: {} as WeeklyHours,
-    website: "",
-    instagram: "",
-    pourOver: false,
-  });
+const getInitialFormData = (initialData?: InitialShopData) => ({
+  name: initialData?.name || "",
+  address: "",
+  latitude: "",
+  longitude: "",
+  image: initialData?.image || "",
+  machine: initialData?.machine || "",
+  accessibility: initialData?.accessibility || false,
+  hasWifi: initialData?.hasWifi || false,
+  description: initialData?.description || "",
+  weeklyHours: initialData?.weeklyHours || ({} as WeeklyHours),
+  website: initialData?.website || "",
+  instagram: initialData?.instagram || "",
+  pourOver: initialData?.pourOver || false,
+});
+
+export function AddCoffeeShopDialog({
+  onAdd,
+  initialData,
+  open: controlledOpen,
+  onOpenChange,
+  hideTrigger = false,
+}: AddCoffeeShopDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // Support both controlled and uncontrolled modes
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = (value: boolean) => {
+    if (!isControlled) {
+      setInternalOpen(value);
+    }
+    onOpenChange?.(value);
+  };
+
+  const [formData, setFormData] = useState(() =>
+    getInitialFormData(initialData)
+  );
   const [useManualCoords, setUseManualCoords] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const latitudeInputRef = useRef<HTMLInputElement>(null);
+
+  // Reset form when dialog opens with new initialData
+  useEffect(() => {
+    if (open) {
+      setFormData(getInitialFormData(initialData));
+      setUseManualCoords(false);
+      setError(null);
+    }
+  }, [open, initialData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,17 +159,25 @@ export function AddCoffeeShopDialog({ onAdd }: AddCoffeeShopDialogProps) {
     }
   };
 
+  const isAddingLocation = !!initialData?.name;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button data-testid="button-add-shop" variant="secondary">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Coffee Shop
-        </Button>
-      </DialogTrigger>
+      {!hideTrigger && (
+        <DialogTrigger asChild>
+          <Button data-testid="button-add-shop" variant="secondary">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Coffee Shop
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Coffee Shop</DialogTitle>
+          <DialogTitle>
+            {isAddingLocation
+              ? `Add Location for ${initialData.name}`
+              : "Add New Coffee Shop"}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (

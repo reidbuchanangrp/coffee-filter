@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
 import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
-import { LoginDialog } from "../components/LoginDialog";
 import { useAuth } from "../lib/AuthContext";
+import { HamburgerMenu } from "../components/HamburgerMenu";
+import { LocationSearch } from "../components/LocationSearch";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -45,6 +46,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
+  const [addLocationInitialData, setAddLocationInitialData] = useState<
+    Partial<CoffeeShop> | undefined
+  >(undefined);
+  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(
+    null
+  );
 
   const fetchCoffeeShops = async () => {
     try {
@@ -122,16 +130,38 @@ export default function Home() {
     }
   };
 
+  const handleAddLocation = (shop: CoffeeShop) => {
+    // Pre-fill with shared brand info, but clear location-specific data
+    setAddLocationInitialData({
+      name: shop.name,
+      description: shop.description,
+      machine: shop.machine,
+      website: shop.website,
+      instagram: shop.instagram,
+      image: shop.image,
+      accessibility: shop.accessibility,
+      hasWifi: shop.hasWifi,
+      pourOver: shop.pourOver,
+      weeklyHours: shop.weeklyHours,
+    });
+    setIsAddLocationDialogOpen(true);
+  };
+
   return (
     <div className="h-screen flex flex-col">
-      <header className="flex items-center justify-between px-6 py-3 border-b bg-primary">
+      <header className="flex items-center justify-between px-4 py-3 border-b bg-primary gap-2">
         <div className="flex items-center gap-2">
+          <HamburgerMenu />
           <Coffee className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-semibold font-serif">CoffeeFilter</h1>
+          <h1 className="text-xl font-semibold font-serif hidden sm:block">
+            CoffeeFilter
+          </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LocationSearch
+            onLocationSelect={(lat, lng) => setSearchCenter([lat, lng])}
+          />
           {isAdmin && <AddCoffeeShopDialog onAdd={handleAddCoffeeShop} />}
-          <LoginDialog />
         </div>
       </header>
       <main className="flex-1 relative overflow-hidden">
@@ -149,6 +179,7 @@ export default function Home() {
           coffeeShops={coffeeShops}
           selectedShopId={selectedShop?.id ?? 0}
           onMarkerClick={setSelectedShop}
+          searchCenter={searchCenter}
         />
         {selectedShop && (
           <>
@@ -157,14 +188,26 @@ export default function Home() {
               onClose={() => setSelectedShop(null)}
               onDelete={isAdmin ? handleDeleteCoffeeShop : undefined}
               onEdit={isAdmin ? () => setIsEditDialogOpen(true) : undefined}
+              onAddLocation={
+                isAdmin ? () => handleAddLocation(selectedShop) : undefined
+              }
             />
             {isAdmin && (
-              <EditCoffeeShopDialog
-                shop={selectedShop}
-                open={isEditDialogOpen}
-                onOpenChange={setIsEditDialogOpen}
-                onSave={handleUpdateCoffeeShop}
-              />
+              <>
+                <EditCoffeeShopDialog
+                  shop={selectedShop}
+                  open={isEditDialogOpen}
+                  onOpenChange={setIsEditDialogOpen}
+                  onSave={handleUpdateCoffeeShop}
+                />
+                <AddCoffeeShopDialog
+                  onAdd={handleAddCoffeeShop}
+                  initialData={addLocationInitialData}
+                  open={isAddLocationDialogOpen}
+                  onOpenChange={setIsAddLocationDialogOpen}
+                  hideTrigger
+                />
+              </>
             )}
           </>
         )}
