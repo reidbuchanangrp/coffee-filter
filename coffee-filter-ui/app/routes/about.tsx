@@ -55,7 +55,7 @@ export default function About() {
               About CoffeeFilter
             </h1>
             <p className="text-xl text-muted-foreground max-w-xl mx-auto">
-              "Friend's don't let friend's drink bad coffee."
+              "Friends don't let friends drink bad coffee."
             </p>
           </div>
 
