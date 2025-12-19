@@ -10,6 +10,7 @@ import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
 import { useAuth } from "../lib/AuthContext";
 import { HamburgerMenu } from "../components/HamburgerMenu";
 import { LocationSearch } from "../components/LocationSearch";
+import { CFLogo } from "../components/CFLogo";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -152,7 +153,10 @@ export default function Home() {
       <header className="flex items-center justify-between px-4 py-3 border-b bg-primary gap-2">
         <div className="flex items-center gap-2">
           <HamburgerMenu />
-          <Coffee className="h-6 w-6 text-primary" />
+          {/* Mobile: CF logo */}
+          <CFLogo className="sm:hidden" size={32} />
+          {/* Desktop: Coffee icon + text */}
+          <Coffee className="h-6 w-6 text-primary hidden sm:block" />
           <h1 className="text-xl font-semibold font-serif hidden sm:block">
             CoffeeFilter
           </h1>
