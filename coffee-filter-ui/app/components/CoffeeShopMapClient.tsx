@@ -58,6 +58,19 @@ const createClusterIcon = (cluster: { getChildCount: () => number }) => {
   });
 };
 
+// Pulsing user location icon
+const userLocationIcon = L.divIcon({
+  html: `
+    <div class="user-location-marker">
+      <div class="user-location-pulse"></div>
+      <div class="user-location-dot"></div>
+    </div>
+  `,
+  className: "user-location-icon",
+  iconSize: L.point(24, 24),
+  iconAnchor: L.point(12, 12),
+});
+
 // helper function to get the center of the map
 function RecenterMap({ center }: { center: [number, number] }) {
   const map = useMap();
@@ -116,6 +129,13 @@ export function CoffeeShopMapClient({
     >
       {searchCenter && <RecenterMap center={searchCenter} />}
       {!searchCenter && userLocation && <RecenterMap center={userLocation} />}
+      {userLocation && (
+        <Marker
+          position={userLocation}
+          icon={userLocationIcon}
+          zIndexOffset={1000}
+        />
+      )}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
