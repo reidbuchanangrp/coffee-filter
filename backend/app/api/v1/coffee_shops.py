@@ -30,11 +30,11 @@ def serialize_weekly_hours(weekly_hours):
     return weekly_hours
 
 @router.get("/coffee-shops", response_model=List[CoffeeShopSchema])
-def get_coffee_shops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_coffee_shops(db: Session = Depends(get_db)):
     """
     Get all coffee shops.
     """
-    shops = db.query(CoffeeShop).offset(skip).limit(limit).all()
+    shops = db.query(CoffeeShop).all()
     return shops
 
 @router.get("/coffee-shops/{shop_id}", response_model=CoffeeShopSchema)
