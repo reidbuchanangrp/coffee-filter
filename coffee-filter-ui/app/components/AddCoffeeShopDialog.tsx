@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -183,6 +184,9 @@ export function AddCoffeeShopDialog({
               ? `Add Location for ${initialData.name}`
               : "Add New Coffee Shop"}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Fill out the form to add a new coffee shop to the map
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (

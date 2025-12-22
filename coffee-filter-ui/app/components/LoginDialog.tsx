@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -78,6 +79,9 @@ export function LoginDialog() {
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>Admin Login</DialogTitle>
+          <DialogDescription className="sr-only">
+            Enter your credentials to access admin features
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
