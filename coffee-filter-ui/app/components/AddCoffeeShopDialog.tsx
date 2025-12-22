@@ -165,9 +165,14 @@ export function AddCoffeeShopDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {!hideTrigger && (
         <DialogTrigger asChild>
-          <Button data-testid="button-add-shop" variant="secondary">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Coffee Shop
+          <Button
+            data-testid="button-add-shop"
+            variant="add"
+            size="icon"
+            className="sm:w-auto sm:px-4"
+          >
+            <Plus className="h-5 w-5 sm:mr-1" strokeWidth={3} />
+            <span className="hidden sm:inline">Add Coffee Shop</span>
           </Button>
         </DialogTrigger>
       )}
