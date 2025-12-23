@@ -119,6 +119,7 @@ export function CoffeeShopMapClient({
       ? [coffeeShops[0].latitude, coffeeShops[0].longitude]
       : [39.0997, -94.5786];
   const zoom = 12;
+
   return (
     <MapContainer
       center={center}

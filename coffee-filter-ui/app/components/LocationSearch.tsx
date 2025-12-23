@@ -29,10 +29,12 @@ export function LocationSearch({
 }: LocationSearchProps) {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   // Format suggestion into readable address
   const formatAddress = (suggestion: Suggestion): string => {
@@ -67,7 +69,7 @@ export function LocationSearch({
       );
       const data = await response.json();
       setSuggestions(data.features || []);
-      setIsOpen(true);
+      setIsSearchOpen(true);
     } catch (error) {
       console.error("Error fetching location suggestions:", error);
       setSuggestions([]);
@@ -98,15 +100,59 @@ export function LocationSearch({
     setValue(address);
     onLocationSelect(lat, lng);
     setSuggestions([]);
-    setIsOpen(false);
+    setIsSearchOpen(false);
+    setHighlightedIndex(-1);
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isSearchOpen || suggestions.length === 0) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev < suggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev > 0 ? prev - 1 : suggestions.length - 1
+        );
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+          handleSelect(suggestions[highlightedIndex]);
+        }
+        break;
+      case "Escape":
+        setIsSearchOpen(false);
+        setHighlightedIndex(-1);
+        break;
+      case "Tab":
+        // Allow tab to select if something is highlighted
+        if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+          e.preventDefault();
+          handleSelect(suggestions[highlightedIndex]);
+        }
+        break;
+    }
   };
 
   // Clear search
   const handleClear = () => {
     setValue("");
     setSuggestions([]);
-    setIsOpen(false);
+    setIsSearchOpen(false);
+    setHighlightedIndex(-1);
   };
+
+  // Reset highlighted index when suggestions change
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [suggestions]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -115,7 +161,7 @@ export function LocationSearch({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        setIsOpen(false);
+        setIsSearchOpen(false);
       }
     };
 
@@ -139,9 +185,18 @@ export function LocationSearch({
         <Input
           value={value}
           onChange={handleInputChange}
-          onFocus={() => suggestions.length > 0 && setIsOpen(true)}
+          onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="pl-8 pr-8 w-[200px] md:w-[250px] h-9 bg-background/80"
+          role="combobox"
+          aria-expanded={isSearchOpen}
+          aria-haspopup="listbox"
+          aria-activedescendant={
+            highlightedIndex >= 0
+              ? `location-option-${highlightedIndex}`
+              : undefined
+          }
         />
         {value && (
           <Button
@@ -160,13 +215,23 @@ export function LocationSearch({
         )}
       </div>
 
-      {isOpen && suggestions.length > 0 && (
-        <ul className="absolute z-[9999] w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto">
+      {isSearchOpen && suggestions.length > 0 && (
+        <ul
+          ref={listRef}
+          role="listbox"
+          className="absolute z-9999 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
+        >
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
+              id={`location-option-${index}`}
+              role="option"
+              aria-selected={index === highlightedIndex}
               onClick={() => handleSelect(suggestion)}
-              className="flex items-start gap-2 px-3 py-2 hover:bg-accent cursor-pointer text-sm"
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className={`flex items-start gap-2 px-3 py-2 cursor-pointer text-sm ${
+                index === highlightedIndex ? "bg-accent" : "hover:bg-accent"
+              }`}
             >
               <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
               <span>{formatAddress(suggestion)}</span>

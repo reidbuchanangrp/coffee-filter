@@ -6,6 +6,7 @@ interface CoffeeShopMapProps {
   selectedShopId: number;
   onMarkerClick: (shop: CoffeeShop) => void;
   searchCenter?: [number, number] | null;
+  isOpen?: boolean;
 }
 
 export function CoffeeShopMap({
@@ -13,12 +14,14 @@ export function CoffeeShopMap({
   selectedShopId,
   onMarkerClick,
   searchCenter,
+  isOpen,
 }: CoffeeShopMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<{
     coffeeShops: CoffeeShop[];
     selectedShopId: number;
     onMarkerClick: (shop: CoffeeShop) => void;
     searchCenter?: [number, number] | null;
+    isOpen?: boolean;
   }> | null>(null);
 
   useEffect(() => {
@@ -42,6 +45,7 @@ export function CoffeeShopMap({
       selectedShopId={selectedShopId}
       onMarkerClick={onMarkerClick}
       searchCenter={searchCenter}
+      isOpen={isOpen}
     />
   );
 }

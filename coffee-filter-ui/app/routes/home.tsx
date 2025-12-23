@@ -11,6 +11,9 @@ import { useAuth } from "../lib/AuthContext";
 import { HamburgerMenu } from "../components/HamburgerMenu";
 import { LocationSearch } from "../components/LocationSearch";
 import { CFLogo } from "../components/CFLogo";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { isCurrentlyOpen } from "~/components/WeeklyHoursInput";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -46,6 +49,7 @@ export default function Home() {
   const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
   const [addLocationInitialData, setAddLocationInitialData] = useState<
@@ -148,6 +152,10 @@ export default function Home() {
     setIsAddLocationDialogOpen(true);
   };
 
+  const filterShopsByOpen = (shops: CoffeeShop[]) => {
+    return shops.filter((shop) => isCurrentlyOpen(shop.weeklyHours || {}));
+  };
+
   return (
     <div className="h-screen flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b bg-primary gap-2">
@@ -162,6 +170,20 @@ export default function Home() {
           </h1>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
+          <Label
+            htmlFor="isOpen"
+            className="cursor-pointer font-bold font-serif"
+          >
+            Show only open cafes
+          </Label>
+          <Switch
+            id="isOpen"
+            checked={isOpen}
+            onCheckedChange={setIsOpen}
+            data-testid="switch-is-open"
+            isOpen={true}
+          />
+
           <LocationSearch
             onLocationSelect={(lat, lng) => setSearchCenter([lat, lng])}
           />
@@ -180,7 +202,7 @@ export default function Home() {
           </div>
         )}
         <CoffeeShopMap
-          coffeeShops={coffeeShops}
+          coffeeShops={isOpen ? filterShopsByOpen(coffeeShops) : coffeeShops}
           selectedShopId={selectedShop?.id ?? 0}
           onMarkerClick={setSelectedShop}
           searchCenter={searchCenter}
