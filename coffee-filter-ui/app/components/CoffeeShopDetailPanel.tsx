@@ -70,15 +70,7 @@ export function CoffeeShopDetailPanel({
     >
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b p-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Coffee Shop Details</h2>
-        {shop.starred && (
-          <Badge
-            variant="default"
-            className="bg-yellow-500 hover:bg-yellow-500 animate-pulse"
-          >
-            <Star className="h-4 w-4" />
-            Featured Shop
-          </Badge>
-        )}
+
         <div className="flex items-center gap-1">
           {onAddLocation && (
             <Button
@@ -111,7 +103,17 @@ export function CoffeeShopDetailPanel({
           </Button>
         </div>
       </div>
-
+      {shop.starred && (
+        <div className="pt-2 pl-2">
+          <Badge
+            variant="default"
+            className="bg-yellow-500 hover:bg-yellow-500 animate-pulse"
+          >
+            <Star className="h-4 w-4" />
+            Featured Shop
+          </Badge>
+        </div>
+      )}
       <div className="p-6 space-y-6">
         <div>
           <div className="flex items-center justify-between gap-3 mb-2">
