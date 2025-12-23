@@ -287,19 +287,22 @@ export function EditCoffeeShopDialog({
                   data-testid="edit-switch-wifi"
                 />
               </div>
-            </div>
-            <div className="flex items-center justify-between space-x-2">
-              <Label htmlFor="edit-starred" className="flex items-center gap-2">
-                <span>⭐</span> Featured Shop
-              </Label>
-              <Switch
-                id="edit-starred"
-                checked={formData.starred}
-                onCheckedChange={(checked: boolean) =>
-                  setFormData({ ...formData, starred: checked })
-                }
-                data-testid="edit-switch-starred"
-              />
+              <div className="flex items-center justify-between space-x-2">
+                <Label
+                  htmlFor="edit-starred"
+                  className="flex items-center gap-2"
+                >
+                  <span>⭐</span> Featured Shop
+                </Label>
+                <Switch
+                  id="edit-starred"
+                  checked={formData.starred}
+                  onCheckedChange={(checked: boolean) =>
+                    setFormData({ ...formData, starred: checked })
+                  }
+                  data-testid="edit-switch-starred"
+                />
+              </div>
             </div>
 
             <div className="col-span-2">
