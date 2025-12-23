@@ -263,7 +263,10 @@ export function EditCoffeeShopDialog({
               </div>
 
               <div className="flex items-center justify-between space-x-2">
-                <Label htmlFor="edit-starred" className="flex items-center gap-2">
+                <Label
+                  htmlFor="edit-starred"
+                  className="flex items-center gap-2"
+                >
                   <span>⭐</span> Featured Shop
                 </Label>
                 <Switch

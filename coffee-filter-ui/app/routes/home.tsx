@@ -96,6 +96,7 @@ export default function Home() {
       pourOver: data.pourOver || false,
       website: data.website || undefined,
       instagram: data.instagram || undefined,
+      starred: data.starred || false,
     };
 
     const { createCoffeeShop } = await import("../lib/api");
