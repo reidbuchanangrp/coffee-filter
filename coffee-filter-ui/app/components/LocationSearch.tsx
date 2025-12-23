@@ -25,7 +25,7 @@ interface LocationSearchProps {
 
 export function LocationSearch({
   onLocationSelect,
-  placeholder = "Search location...",
+  placeholder = "Search...",
 }: LocationSearchProps) {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -133,25 +133,20 @@ export function LocationSearch({
         break;
       case "Tab":
         if (e.shiftKey) {
-          // Shift+Tab: move up or exit if at top
           if (highlightedIndex > 0) {
             e.preventDefault();
             setHighlightedIndex((prev) => prev - 1);
           } else if (highlightedIndex === 0) {
-            // At first item, let Tab naturally exit upward
             setHighlightedIndex(-1);
           }
         } else {
-          // Tab: move down through results
           if (highlightedIndex < suggestions.length - 1) {
             e.preventDefault();
             setHighlightedIndex((prev) => prev + 1);
           } else if (highlightedIndex === suggestions.length - 1) {
-            // At last item, select it and close
             e.preventDefault();
             handleSelect(suggestions[highlightedIndex]);
           } else if (highlightedIndex === -1 && suggestions.length > 0) {
-            // Nothing highlighted yet, start at first
             e.preventDefault();
             setHighlightedIndex(0);
           }
@@ -200,14 +195,14 @@ export function LocationSearch({
   return (
     <div ref={containerRef} className="relative">
       <div className="relative flex items-center">
-        <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
         <Input
           value={value}
           onChange={handleInputChange}
           onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-8 pr-8 w-[200px] md:w-[250px] h-9 bg-background/80"
+          className="pl-8 pr-8 h-9 bg-background/80 w-[100px] sm:w-[200px] md:w-[250px]"
           role="combobox"
           aria-expanded={isSearchOpen}
           aria-haspopup="listbox"
@@ -238,7 +233,7 @@ export function LocationSearch({
         <ul
           ref={listRef}
           role="listbox"
-          className="absolute z-9999 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute z-9999 w-max min-w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
         >
           {suggestions.map((suggestion, index) => (
             <li

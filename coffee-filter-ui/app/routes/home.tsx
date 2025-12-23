@@ -175,7 +175,8 @@ export default function Home() {
             htmlFor="isOpen"
             className="cursor-pointer font-bold font-serif"
           >
-            Show only open cafes
+            <span className="sm:hidden">Open</span>
+            <span className="hidden sm:inline">Show only open cafes</span>
           </Label>
           <Switch
             id="isOpen"

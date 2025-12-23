@@ -327,8 +327,7 @@ def normalize_name(name: str) -> str:
 def is_duplicate(shop_name: str, shop_address: str, existing: set, 
                  existing_coords: dict = None, lat: float = None, lng: float = None) -> bool:
     """Check if shop already exists using multiple strategies."""
-    name_lower = shop_name.lower().strip()
-    name_normalized = normalize_name(shop_name)
+   
     address_lower = shop_address.lower()
     
     # Extract street number and name for address comparison
@@ -338,27 +337,15 @@ def is_duplicate(shop_name: str, shop_address: str, existing: set,
         existing_normalized = normalize_name(existing_name)
         existing_addr_parts = existing_addr.split(",")[0].strip()
         
-        # Strategy 1: Exact name match
-        if name_lower == existing_name:
-            return True
+   
+     
         
-        # Strategy 2: Normalized name match (ignores "Coffee", "Roasters", etc.)
-        if name_normalized and existing_normalized and name_normalized == existing_normalized:
-            return True
-        
-        # Strategy 3: One name contains the other (for variations)
-        if len(name_normalized) > 3 and len(existing_normalized) > 3:
-            if name_normalized in existing_normalized or existing_normalized in name_normalized:
-                # Also check address similarity to confirm
-                if address_parts[:15] == existing_addr_parts[:15]:  # First 15 chars of street
-                    return True
-        
-        # Strategy 4: Same street address (catches same location, different name)
+        # Strategy 1: Same street address (catches same location, different name)
         if address_parts and existing_addr_parts:
             if address_parts == existing_addr_parts:
                 return True
     
-    # Strategy 5: Coordinate proximity (within ~50 meters)
+    # Strategy 2: Coordinate proximity (within ~50 meters)
     if existing_coords and lat and lng:
         for (ex_name, _), (ex_lat, ex_lng) in existing_coords.items():
             if ex_lat and ex_lng:
