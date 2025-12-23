@@ -132,10 +132,29 @@ export function LocationSearch({
         setHighlightedIndex(-1);
         break;
       case "Tab":
-        // Allow tab to select if something is highlighted
-        if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-          e.preventDefault();
-          handleSelect(suggestions[highlightedIndex]);
+        if (e.shiftKey) {
+          // Shift+Tab: move up or exit if at top
+          if (highlightedIndex > 0) {
+            e.preventDefault();
+            setHighlightedIndex((prev) => prev - 1);
+          } else if (highlightedIndex === 0) {
+            // At first item, let Tab naturally exit upward
+            setHighlightedIndex(-1);
+          }
+        } else {
+          // Tab: move down through results
+          if (highlightedIndex < suggestions.length - 1) {
+            e.preventDefault();
+            setHighlightedIndex((prev) => prev + 1);
+          } else if (highlightedIndex === suggestions.length - 1) {
+            // At last item, select it and close
+            e.preventDefault();
+            handleSelect(suggestions[highlightedIndex]);
+          } else if (highlightedIndex === -1 && suggestions.length > 0) {
+            // Nothing highlighted yet, start at first
+            e.preventDefault();
+            setHighlightedIndex(0);
+          }
         }
         break;
     }
