@@ -39,6 +39,7 @@ function transformToFrontend(backendShop: any): CoffeeShop {
     pourOver: backendShop.pour_over,
     website: backendShop.website,
     instagram: backendShop.instagram,
+    starred: backendShop.starred || false,
   };
 }
 
@@ -66,6 +67,7 @@ function transformToBackend(frontendShop: Partial<CoffeeShop>): any {
   if (frontendShop.website !== undefined) result.website = frontendShop.website;
   if (frontendShop.instagram !== undefined)
     result.instagram = frontendShop.instagram;
+  if (frontendShop.starred !== undefined) result.starred = frontendShop.starred;
   return result;
 }
 

@@ -66,6 +66,7 @@ export function EditCoffeeShopDialog({
     website: "",
     instagram: "",
     pourOver: false,
+    starred: false,
   });
   const [useManualCoords, setUseManualCoords] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -88,6 +89,7 @@ export function EditCoffeeShopDialog({
         website: shop.website || "",
         instagram: extractInstagramUsername(shop.instagram || ""),
         pourOver: shop.pourOver,
+        starred: shop.starred || false,
       });
       setUseManualCoords(false);
       setError(null);
@@ -112,6 +114,7 @@ export function EditCoffeeShopDialog({
         website: formData.website || undefined,
         instagram: formatInstagramUrl(formData.instagram),
         pourOver: formData.pourOver,
+        starred: formData.starred,
       };
 
       // Include coordinates if manually changed
@@ -256,6 +259,20 @@ export function EditCoffeeShopDialog({
                     setFormData({ ...formData, pourOver: checked })
                   }
                   data-testid="edit-switch-pour-over"
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2">
+                <Label htmlFor="edit-starred" className="flex items-center gap-2">
+                  <span>⭐</span> Featured Shop
+                </Label>
+                <Switch
+                  id="edit-starred"
+                  checked={formData.starred}
+                  onCheckedChange={(checked: boolean) =>
+                    setFormData({ ...formData, starred: checked })
+                  }
+                  data-testid="edit-switch-starred"
                 />
               </div>
 

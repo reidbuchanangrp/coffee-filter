@@ -34,6 +34,43 @@ const createCoffeeIcon = (isSelected: boolean) => {
   });
 };
 
+const createStarredIcon = (isSelected: boolean) => {
+  const iconMarkup = renderToStaticMarkup(
+    <div
+      style={{
+        background: isSelected ? "#eab308" : "#f59e0b",
+        borderRadius: "50%",
+        width: "36px",
+        height: "36px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "3px solid #fef3c7",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        position: "relative",
+      }}
+    >
+      <Coffee size={17} color="white" />
+      <span
+        style={{
+          position: "absolute",
+          top: "-6px",
+          right: "-6px",
+          fontSize: "14px",
+        }}
+      >
+        ⭐
+      </span>
+    </div>
+  );
+  return L.divIcon({
+    html: iconMarkup,
+    className: "starred-coffee-icon",
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+  });
+};
+
 // Custom cluster icon that shows count in a circle
 const createClusterIcon = (cluster: { getChildCount: () => number }) => {
   const count = cluster.getChildCount();
@@ -151,7 +188,12 @@ export function CoffeeShopMapClient({
           <Marker
             key={shop.id}
             position={[shop.latitude, shop.longitude]}
-            icon={createCoffeeIcon(shop.id === selectedShopId)}
+            icon={
+              shop.starred
+                ? createStarredIcon(shop.id === selectedShopId)
+                : createCoffeeIcon(shop.id === selectedShopId)
+            }
+            zIndexOffset={shop.starred ? 100 : 0}
             eventHandlers={{
               click: () => {
                 onMarkerClick?.(shop);

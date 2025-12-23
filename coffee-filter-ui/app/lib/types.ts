@@ -28,4 +28,5 @@ export interface CoffeeShop {
   pourOver: boolean;
   website?: string;
   instagram?: string;
+  starred: boolean;
 }

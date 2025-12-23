@@ -24,6 +24,7 @@ class CoffeeShopBase(BaseModel):
     pour_over: bool = False
     website: Optional[str] = None
     instagram: Optional[str] = None
+    starred: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -42,6 +43,7 @@ class CoffeeShopCreate(BaseModel):
     pour_over: bool = False
     website: Optional[str] = None
     instagram: Optional[str] = None
+    starred: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -60,6 +62,7 @@ class CoffeeShopUpdate(BaseModel):
     pour_over: Optional[bool] = None
     website: Optional[str] = None
     instagram: Optional[str] = None
+    starred: Optional[bool] = None
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -18,4 +18,5 @@ class CoffeeShop(Base):
     pour_over = Column(Boolean, default=False)
     website = Column(String, nullable=True)
     instagram = Column(String, nullable=True)
+    starred = Column(Boolean, default=False)  # Featured/favorite shop
 
