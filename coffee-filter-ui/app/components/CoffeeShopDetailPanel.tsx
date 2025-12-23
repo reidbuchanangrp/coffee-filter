@@ -11,6 +11,7 @@ import {
   Trash2,
   Pencil,
   Copy,
+  Star,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { SiInstagram } from "react-icons/si";
@@ -69,6 +70,15 @@ export function CoffeeShopDetailPanel({
     >
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b p-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Coffee Shop Details</h2>
+        {shop.starred && (
+          <Badge
+            variant="default"
+            className="bg-yellow-500 hover:bg-yellow-500 animate-pulse"
+          >
+            <Star className="h-4 w-4" />
+            Featured Shop
+          </Badge>
+        )}
         <div className="flex items-center gap-1">
           {onAddLocation && (
             <Button
