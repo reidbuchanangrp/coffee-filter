@@ -25,7 +25,7 @@ interface LocationSearchProps {
 
 export function LocationSearch({
   onLocationSelect,
-  placeholder = "Search...",
+  placeholder = "Search location...",
 }: LocationSearchProps) {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -202,7 +202,7 @@ export function LocationSearch({
           onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-8 pr-8 h-9 bg-background/80 w-[100px] sm:w-[200px] md:w-[250px]"
+          className="pl-8 pr-8 h-9 bg-background/80 w-[80px] sm:w-[200px] md:w-[250px]"
           role="combobox"
           aria-expanded={isSearchOpen}
           aria-haspopup="listbox"

@@ -109,7 +109,7 @@ export function CoffeeShopDetailPanel({
             variant="default"
             className="bg-yellow-500 hover:bg-yellow-500 animate-pulse"
           >
-            <Star className="h-4 w-4" />
+            <Star className="h-4 w-4 mr-1" />
             Featured Shop
           </Badge>
         </div>
