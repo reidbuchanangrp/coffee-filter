@@ -202,7 +202,7 @@ export function LocationSearch({
           onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-7 h-9 bg-background/80  max-w-[200px] text-ellipsis justify-between flex text-center"
+          className="pl-7 h-9 bg-background/80 max-w-[200px] text-ellipsis focus:placeholder:opacity-0"
           role="combobox"
           aria-expanded={isSearchOpen}
           aria-haspopup="listbox"
@@ -233,7 +233,7 @@ export function LocationSearch({
         <ul
           ref={listRef}
           role="listbox"
-          className="absolute z-9999 right-0 sm:right-auto sm:left-0 w-[280px] sm:w-[300px] mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute z-9999 right-0 w-[280px] sm:w-[320px] max-w-[calc(100vw-2rem)] mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
         >
           {suggestions.map((suggestion, index) => (
             <li
@@ -243,7 +243,7 @@ export function LocationSearch({
               aria-selected={index === highlightedIndex}
               onClick={() => handleSelect(suggestion)}
               onMouseEnter={() => setHighlightedIndex(index)}
-              className={`flex items-start gap-2 px-3 py-2 cursor-pointer text-sm ${
+              className={`flex items-start gap-2 px-3 py-2  text-sm ${
                 index === highlightedIndex ? "bg-accent" : "hover:bg-accent"
               }`}
             >
