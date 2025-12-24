@@ -233,7 +233,7 @@ export function LocationSearch({
         <ul
           ref={listRef}
           role="listbox"
-          className="absolute z-9999 w-max min-w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute z-9999 right-0 sm:right-auto sm:left-0 w-[280px] sm:w-[300px] mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto"
         >
           {suggestions.map((suggestion, index) => (
             <li
