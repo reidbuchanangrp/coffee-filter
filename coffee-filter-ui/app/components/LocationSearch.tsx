@@ -202,7 +202,7 @@ export function LocationSearch({
           onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-7 h-9 bg-background/80 w-[110px] sm:w-[200px] md:w-[250px] text-ellipsis justify-between flex text-center"
+          className="pl-7 h-9 bg-background/80  max-w-[200px] text-ellipsis justify-between flex text-center"
           role="combobox"
           aria-expanded={isSearchOpen}
           aria-haspopup="listbox"
