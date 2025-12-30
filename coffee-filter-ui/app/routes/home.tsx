@@ -23,12 +23,11 @@ function createSlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-// Get shop slug from URL path
+// Get shop slug from URL query parameter
 function getShopSlugFromUrl(): string | null {
   if (typeof window === "undefined") return null;
-  const path = window.location.pathname;
-  const match = path.match(/^\/shop\/(.+)$/);
-  return match ? decodeURIComponent(match[1]) : null;
+  const params = new URLSearchParams(window.location.search);
+  return params.get("shop");
 }
 
 export function meta({}: Route.MetaArgs) {
@@ -80,7 +79,7 @@ export default function Home() {
     setSelectedShop(shop);
     if (shop) {
       const slug = createSlug(shop.name);
-      window.history.pushState({}, "", `/shop/${slug}`);
+      window.history.pushState({}, "", `/?shop=${encodeURIComponent(slug)}`);
     } else {
       window.history.pushState({}, "", "/");
     }
