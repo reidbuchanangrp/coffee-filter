@@ -12,8 +12,9 @@ import {
   Pencil,
   Copy,
   Star,
+  Share2,
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { SiInstagram } from "react-icons/si";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -46,11 +47,24 @@ export function CoffeeShopDetailPanel({
 }: CoffeeShopDetailPanelProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
 
   const isOpen = useMemo(
     () => isCurrentlyOpen(shop.weeklyHours || {}),
     [shop.weeklyHours]
   );
+
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch {
+      // Clipboard API not available - fail silently
+      console.warn("Clipboard API not available");
+    }
+  }, []);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -300,11 +314,11 @@ export function CoffeeShopDetailPanel({
           />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 mt-6 justify-between">
           <Button
-            className="flex-1"
             asChild
             data-testid="button-get-directions"
+            className="w-full"
           >
             <a
               href={`https://www.google.com/maps/dir/?api=1&destination=${shop.latitude},${shop.longitude}`}
@@ -314,6 +328,24 @@ export function CoffeeShopDetailPanel({
               <MapPin className="h-4 w-4 mr-2" />
               Get Directions
             </a>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleShare}
+            data-testid="button-share"
+            className="w-full"
+          >
+            {showCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </>
+            )}
           </Button>
         </div>
 

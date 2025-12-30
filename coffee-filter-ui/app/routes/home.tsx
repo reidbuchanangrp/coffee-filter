@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
 import { getCoffeeShops, deleteCoffeeShop, updateCoffeeShop } from "../lib/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
 import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
@@ -14,6 +14,22 @@ import { CFLogo } from "../components/CFLogo";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { isCurrentlyOpen } from "~/components/WeeklyHoursInput";
+
+// Create URL-friendly slug from shop name
+function createSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+// Get shop slug from URL path
+function getShopSlugFromUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  const path = window.location.pathname;
+  const match = path.match(/^\/shop\/(.+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -59,12 +75,48 @@ export default function Home() {
     null
   );
 
+  // Update URL when shop is selected
+  const handleSelectShop = useCallback((shop: CoffeeShop | null) => {
+    setSelectedShop(shop);
+    if (shop) {
+      const slug = createSlug(shop.name);
+      window.history.pushState({}, "", `/shop/${slug}`);
+    } else {
+      window.history.pushState({}, "", "/");
+    }
+  }, []);
+
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const slug = getShopSlugFromUrl();
+      if (slug && coffeeShops.length > 0) {
+        const shop = coffeeShops.find((s) => createSlug(s.name) === slug);
+        setSelectedShop(shop || null);
+      } else {
+        setSelectedShop(null);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [coffeeShops]);
+
   const fetchCoffeeShops = async () => {
     try {
       setLoading(true);
       setError(null);
       const shops = await getCoffeeShops();
       setCoffeeShops(shops);
+
+      // Restore shop from URL after loading
+      const slug = getShopSlugFromUrl();
+      if (slug) {
+        const shop = shops.find((s) => createSlug(s.name) === slug);
+        if (shop) {
+          setSelectedShop(shop);
+        }
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to load coffee shops"
@@ -112,7 +164,7 @@ export default function Home() {
   const handleDeleteCoffeeShop = async (id: number) => {
     try {
       await deleteCoffeeShop(id);
-      setSelectedShop(null);
+      handleSelectShop(null);
       await fetchCoffeeShops();
     } catch (err) {
       console.error("Error deleting coffee shop:", err);
@@ -210,14 +262,14 @@ export default function Home() {
         <CoffeeShopMap
           coffeeShops={isOpen ? filterShopsByOpen(coffeeShops) : coffeeShops}
           selectedShopId={selectedShop?.id ?? 0}
-          onMarkerClick={setSelectedShop}
+          onMarkerClick={handleSelectShop}
           searchCenter={searchCenter}
         />
         {selectedShop && (
           <>
             <CoffeeShopDetailPanel
               shop={selectedShop}
-              onClose={() => setSelectedShop(null)}
+              onClose={() => handleSelectShop(null)}
               onDelete={isAdmin ? handleDeleteCoffeeShop : undefined}
               onEdit={isAdmin ? () => setIsEditDialogOpen(true) : undefined}
               onAddLocation={
