@@ -14,6 +14,7 @@ import { CFLogo } from "../components/CFLogo";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { isCurrentlyOpen } from "~/components/WeeklyHoursInput";
+import { useSearchParams } from "react-router";
 
 // Create URL-friendly slug from shop name
 function createSlug(name: string): string {
@@ -21,13 +22,6 @@ function createSlug(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-}
-
-// Get shop slug from URL query parameter
-function getShopSlugFromUrl(): string | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
-  return params.get("shop");
 }
 
 export function meta({}: Route.MetaArgs) {
@@ -60,6 +54,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const { isAdmin } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedShop, setSelectedShop] = useState<CoffeeShop | null>(null);
   const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,31 +70,29 @@ export default function Home() {
   );
 
   // Update URL when shop is selected
-  const handleSelectShop = useCallback((shop: CoffeeShop | null) => {
-    setSelectedShop(shop);
-    if (shop) {
-      const slug = createSlug(shop.name);
-      window.history.pushState({}, "", `/?shop=${encodeURIComponent(slug)}`);
-    } else {
-      window.history.pushState({}, "", "/");
-    }
-  }, []);
-
-  // Handle browser back/forward navigation
-  useEffect(() => {
-    const handlePopState = () => {
-      const slug = getShopSlugFromUrl();
-      if (slug && coffeeShops.length > 0) {
-        const shop = coffeeShops.find((s) => createSlug(s.name) === slug);
-        setSelectedShop(shop || null);
+  const handleSelectShop = useCallback(
+    (shop: CoffeeShop | null) => {
+      setSelectedShop(shop);
+      if (shop) {
+        const slug = createSlug(shop.name);
+        setSearchParams({ shop: slug });
       } else {
-        setSelectedShop(null);
+        setSearchParams({});
       }
-    };
+    },
+    [setSearchParams]
+  );
 
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [coffeeShops]);
+  // Handle browser back/forward navigation via search params
+  useEffect(() => {
+    const slug = searchParams.get("shop");
+    if (slug && coffeeShops.length > 0) {
+      const shop = coffeeShops.find((s) => createSlug(s.name) === slug);
+      setSelectedShop(shop || null);
+    } else if (!slug) {
+      setSelectedShop(null);
+    }
+  }, [searchParams, coffeeShops]);
 
   const fetchCoffeeShops = async () => {
     try {
@@ -109,7 +102,7 @@ export default function Home() {
       setCoffeeShops(shops);
 
       // Restore shop from URL after loading
-      const slug = getShopSlugFromUrl();
+      const slug = searchParams.get("shop");
       if (slug) {
         const shop = shops.find((s) => createSlug(s.name) === slug);
         if (shop) {
