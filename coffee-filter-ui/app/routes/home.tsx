@@ -16,12 +16,19 @@ import { Label } from "@/components/ui/label";
 import { isCurrentlyOpen } from "~/components/WeeklyHoursInput";
 import { useSearchParams } from "react-router";
 
-// Create URL-friendly slug from shop name
-function createSlug(name: string): string {
-  return name
+// Create URL-friendly slug from shop name and ID (ID ensures uniqueness)
+function createSlug(id: number, name: string): string {
+  const nameSlug = name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+  return `${id}-${nameSlug}`;
+}
+
+// Extract shop ID from slug (format: "123-shop-name")
+function getIdFromSlug(slug: string): number | null {
+  const match = slug.match(/^(\d+)-/);
+  return match ? parseInt(match[1], 10) : null;
 }
 
 export function meta({}: Route.MetaArgs) {
@@ -74,7 +81,7 @@ export default function Home() {
     (shop: CoffeeShop | null) => {
       setSelectedShop(shop);
       if (shop) {
-        const slug = createSlug(shop.name);
+        const slug = createSlug(shop.id, shop.name);
         setSearchParams({ shop: slug });
       } else {
         setSearchParams({});
@@ -87,7 +94,10 @@ export default function Home() {
   useEffect(() => {
     const slug = searchParams.get("shop");
     if (slug && coffeeShops.length > 0) {
-      const shop = coffeeShops.find((s) => createSlug(s.name) === slug);
+      const shopId = getIdFromSlug(slug);
+      const shop = shopId !== null 
+        ? coffeeShops.find((s) => s.id === shopId)
+        : null;
       setSelectedShop(shop || null);
     } else if (!slug) {
       setSelectedShop(null);
@@ -104,7 +114,10 @@ export default function Home() {
       // Restore shop from URL after loading
       const slug = searchParams.get("shop");
       if (slug) {
-        const shop = shops.find((s) => createSlug(s.name) === slug);
+        const shopId = getIdFromSlug(slug);
+        const shop = shopId !== null 
+          ? shops.find((s) => s.id === shopId)
+          : null;
         if (shop) {
           setSelectedShop(shop);
         }
