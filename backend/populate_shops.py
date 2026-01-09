@@ -14,14 +14,14 @@ from typing import Optional
 # =============================================================================
 
 # Your Google Places API key
-GOOGLE_PLACES_API_KEY = os.getenv("GOOGLE_PLACES_API_KEY", "YOUR_API_KEY_HERE")
+GOOGLE_PLACES_API_KEY = os.getenv("GOOGLE_PLACES_API_KEY", "AIzaSyCjsNn7e2Q_o5jTzfdugor_TVmpPaS6HwI")
 
 # Your production API URL
 API_BASE_URL = "https://coffee-filter-production.up.railway.app/api/v1"
 
 # Admin credentials (will prompt if not set)
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "!QA@WS3ed")
 
 # Search configuration
 SEARCH_QUERIES = [
@@ -76,6 +76,7 @@ US_CITIES = [
     ("Washington", "DC", 38.9072, -77.0369),
     ("Baltimore", "MD", 39.2904, -76.6122),
     ("Pittsburgh", "PA", 40.4406, -79.9959),
+    ("New Milford", "NJ", 40.9340, -74.0091),
     
     # Midwest
     ("Chicago", "IL", 41.8781, -87.6298),
