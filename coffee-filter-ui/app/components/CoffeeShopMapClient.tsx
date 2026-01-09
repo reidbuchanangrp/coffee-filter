@@ -85,26 +85,32 @@ const getIcon = (starred: boolean, isSelected: boolean) => {
 };
 
 // Custom cluster icon that shows count in a circle
-const createClusterIcon = (
-  cluster: { getChildCount: () => number },
-  isStarred: boolean
-) => {
+// Checks if any marker within the cluster is starred
+const createClusterIcon = (cluster: {
+  getChildCount: () => number;
+  getAllChildMarkers: () => L.Marker[];
+}) => {
   const count = cluster.getChildCount();
+  const childMarkers = cluster.getAllChildMarkers();
+  const hasStarred = childMarkers.some(
+    (marker) => (marker.options as any).shopStarred === true
+  );
+
   return L.divIcon({
     html: `<div style="
-      background: ${isStarred ? "#eab308" : "#c2410c"};
+      background: ${hasStarred ? "#eab308" : "#c2410c"};
       border-radius: 50%;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 3px solid white;
+      border: 3px solid ${hasStarred ? "#fef3c7" : "white"};
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       color: white;
       font-weight: bold;
       font-size: 14px;
-    ">${count}</div>`,
+    ">${count}${hasStarred ? "⭐" : ""}</div>`,
     className: "coffee-cluster-icon",
     iconSize: L.point(40, 40),
     iconAnchor: L.point(20, 20),
@@ -195,12 +201,7 @@ export function CoffeeShopMapClient({
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
       <MarkerClusterGroup
-        iconCreateFunction={(cluster: any) =>
-          createClusterIcon(
-            cluster,
-            coffeeShops.some((shop) => shop.starred)
-          )
-        }
+        iconCreateFunction={createClusterIcon}
         maxClusterRadius={50}
         spiderfyOnMaxZoom={true}
         showCoverageOnHover={false}
@@ -211,6 +212,8 @@ export function CoffeeShopMapClient({
             position={[shop.latitude, shop.longitude]}
             icon={getIcon(shop.starred ?? false, shop.id === selectedShopId)}
             zIndexOffset={shop.starred ? 100 : 0}
+            // @ts-expect-error - custom property for cluster icon detection
+            shopStarred={shop.starred ?? false}
             eventHandlers={{
               click: () => {
                 onMarkerClick?.(shop);
