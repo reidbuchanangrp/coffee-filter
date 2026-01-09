@@ -85,11 +85,14 @@ const getIcon = (starred: boolean, isSelected: boolean) => {
 };
 
 // Custom cluster icon that shows count in a circle
-const createClusterIcon = (cluster: { getChildCount: () => number }) => {
+const createClusterIcon = (
+  cluster: { getChildCount: () => number },
+  isStarred: boolean
+) => {
   const count = cluster.getChildCount();
   return L.divIcon({
     html: `<div style="
-      background: #c2410c;
+      background: ${isStarred ? "#eab308" : "#c2410c"};
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -192,7 +195,12 @@ export function CoffeeShopMapClient({
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
       <MarkerClusterGroup
-        iconCreateFunction={createClusterIcon}
+        iconCreateFunction={(cluster: any) =>
+          createClusterIcon(
+            cluster,
+            coffeeShops.some((shop) => shop.starred)
+          )
+        }
         maxClusterRadius={50}
         spiderfyOnMaxZoom={true}
         showCoverageOnHover={false}
