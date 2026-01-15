@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
 import { getCoffeeShops, deleteCoffeeShop, updateCoffeeShop } from "../lib/api";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
 import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
@@ -214,9 +214,13 @@ export default function Home() {
     setIsAddLocationDialogOpen(true);
   };
 
-  const filterShopsByOpen = (shops: CoffeeShop[]) => {
-    return shops.filter((shop) => isCurrentlyOpen(shop.weeklyHours || {}));
-  };
+  // Memoize filtered shops to avoid recalculating on every render
+  const openShops = useMemo(
+    () => coffeeShops.filter((shop) => isCurrentlyOpen(shop.weeklyHours || {})),
+    [coffeeShops]
+  );
+
+  const displayedShops = isOpen ? openShops : coffeeShops;
 
   return (
     <div className="h-screen flex flex-col">
@@ -265,7 +269,7 @@ export default function Home() {
           </div>
         )}
         <CoffeeShopMap
-          coffeeShops={isOpen ? filterShopsByOpen(coffeeShops) : coffeeShops}
+          coffeeShops={displayedShops}
           selectedShopId={selectedShop?.id ?? 0}
           onMarkerClick={handleSelectShop}
           searchCenter={searchCenter}
