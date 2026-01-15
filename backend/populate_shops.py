@@ -87,6 +87,7 @@ US_CITIES = [
     ("Detroit", "MI", 42.3314, -83.0458),
     ("Columbus", "OH", 39.9612, -82.9988),
     ("Indianapolis", "IN", 39.7684, -86.1581),
+    ("Little Rock", "AR", 34.7465, -92.2896),
     
     # South
     ("Atlanta", "GA", 33.7490, -84.3880),
@@ -97,6 +98,7 @@ US_CITIES = [
     ("Raleigh", "NC", 35.7796, -78.6382),
     ("Charleston", "SC", 32.7765, -79.9311),
     ("Savannah", "GA", 32.0809, -81.0912),
+    ("Jacksonville", "FL", 30.3322, -81.6557),
     
     # Southwest
     ("Phoenix", "AZ", 33.4484, -112.0740),
@@ -239,20 +241,18 @@ def normalize_time(time_str: str) -> str:
         return f"{hour}{period}"
 
 
-def get_photo_url(photo_reference: str, max_width: int = 400) -> str:
-    """Get photo URL from Google Places photo reference."""
-    return f"https://maps.googleapis.com/maps/api/place/photo?maxwidth={max_width}&photo_reference={photo_reference}&key={GOOGLE_PLACES_API_KEY}"
-
-
 def create_shop_data(place: dict, details: dict) -> dict:
     """Convert Google Places data to our shop format."""
     location = place.get("geometry", {}).get("location", {})
     
-    # Get photo URL if available
-    image_url = "https://placehold.co/150x150/e2e8f0/64748b?text=☕"
+    # Get photo_reference if available (stored for generating fresh URLs via backend proxy)
+    photo_reference = None
     photos = place.get("photos") or details.get("photos")
     if photos and len(photos) > 0:
-        image_url = get_photo_url(photos[0].get("photo_reference", ""))
+        photo_reference = photos[0].get("photo_reference", "")
+    
+    # Set image URL - will be populated by frontend using the photo_reference
+    image_url = "https://placehold.co/150x150/e2e8f0/64748b?text=☕"
     
     # Parse weekly hours if available
     weekly_hours = {}
@@ -280,6 +280,7 @@ def create_shop_data(place: dict, details: dict) -> dict:
         "latitude": location.get("lat"),
         "longitude": location.get("lng"),
         "image": image_url,
+        "photo_reference": photo_reference,  # Stored for generating fresh Google Places photo URLs
         "website": details.get("website"),
         "description": details.get("editorial_summary", {}).get("overview", ""),
         "has_wifi": True,  # Assume true, can be edited later
