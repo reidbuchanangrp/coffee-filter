@@ -316,7 +316,10 @@ export function CoffeeShopDetailPanel({
               className="w-full h-full object-cover rounded-md"
               onError={(e: SyntheticEvent<HTMLImageElement>) => {
                 // Fall back to placeholder if image fails to load
-                e.currentTarget.src = PLACEHOLDER_IMAGE;
+                // Only set placeholder if not already the placeholder (prevent infinite loop)
+                if (!e.currentTarget.src.includes("placehold.co")) {
+                  e.currentTarget.src = PLACEHOLDER_IMAGE;
+                }
               }}
             />
           </div>
