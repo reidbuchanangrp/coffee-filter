@@ -20,6 +20,7 @@ export interface CoffeeShop {
   latitude: number;
   longitude: number;
   image: string;
+  photoReference?: string;  // Google Places photo_reference for fresh URLs
   accessibility: boolean;
   hasWifi: boolean;
   description: string;

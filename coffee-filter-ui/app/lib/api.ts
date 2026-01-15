@@ -3,6 +3,21 @@ import type { CoffeeShop } from "./types";
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
+const PLACEHOLDER_IMAGE = "https://placehold.co/150x150/e2e8f0/64748b?text=☕";
+
+/**
+ * Get the image URL for a coffee shop.
+ * If photoReference is available, use the backend proxy to get a fresh Google Places photo URL.
+ * Otherwise fall back to the stored image URL or placeholder.
+ */
+function getImageUrl(backendShop: any): string {
+  if (backendShop.photo_reference) {
+    // Use backend proxy endpoint for fresh Google Places photo URLs
+    return `${API_BASE_URL}/photos/${backendShop.photo_reference}?maxwidth=400`;
+  }
+  return backendShop.image || PLACEHOLDER_IMAGE;
+}
+
 // Helper to safely get token (SSR-safe)
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -29,8 +44,8 @@ function transformToFrontend(backendShop: any): CoffeeShop {
     address: backendShop.address,
     latitude: backendShop.latitude,
     longitude: backendShop.longitude,
-    image:
-      backendShop.image || "https://placehold.co/150x150/e2e8f0/64748b?text=☕",
+    image: getImageUrl(backendShop),
+    photoReference: backendShop.photo_reference,
     accessibility: backendShop.accessibility,
     hasWifi: backendShop.has_wifi,
     description: backendShop.description,
@@ -53,6 +68,8 @@ function transformToBackend(frontendShop: Partial<CoffeeShop>): any {
   if (frontendShop.longitude !== undefined)
     result.longitude = frontendShop.longitude;
   if (frontendShop.image !== undefined) result.image = frontendShop.image;
+  if (frontendShop.photoReference !== undefined)
+    result.photo_reference = frontendShop.photoReference;
   if (frontendShop.accessibility !== undefined)
     result.accessibility = frontendShop.accessibility;
   if (frontendShop.hasWifi !== undefined)
@@ -106,7 +123,7 @@ export async function createCoffeeShop(
     // Convert to backend format - don't include lat/lng if not provided (backend will geocode)
     const shopData: any = {
       ...transformToBackend(shop),
-      image: shop.image || "https://placehold.co/150x150/e2e8f0/64748b?text=☕",
+      image: shop.image || PLACEHOLDER_IMAGE,
     };
 
     // Only include latitude/longitude if explicitly provided

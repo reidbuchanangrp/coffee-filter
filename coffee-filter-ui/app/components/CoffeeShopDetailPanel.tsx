@@ -14,7 +14,9 @@ import {
   Star,
   Share2,
 } from "lucide-react";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, type SyntheticEvent } from "react";
+
+const PLACEHOLDER_IMAGE = "https://placehold.co/400x400/e2e8f0/64748b?text=☕";
 import { SiInstagram } from "react-icons/si";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -304,15 +306,21 @@ export function CoffeeShopDetailPanel({
             </div>
           </div>
         )}
-        <div className="flex items-center gap-2 text-sm font-medium mb-2">
-          <img
-            src={shop.image || ""}
-            alt={shop.name}
-            width={500}
-            height={500}
-            className="w-full h-full object-cover rounded-md"
-          />
-        </div>
+        {shop.image && (
+          <div className="text-sm font-medium mb-2">
+            <img
+              src={shop.image}
+              alt={shop.name}
+              width={500}
+              height={500}
+              className="w-full h-full object-cover rounded-md"
+              onError={(e: SyntheticEvent<HTMLImageElement>) => {
+                // Fall back to placeholder if image fails to load
+                e.currentTarget.src = PLACEHOLDER_IMAGE;
+              }}
+            />
+          </div>
+        )}
 
         <div className="flex gap-3 mt-6 justify-between">
           <Button
