@@ -110,7 +110,7 @@ const createClusterIcon = (cluster: {
       color: white;
       font-weight: bold;
       font-size: 14px;
-    ">${count}${hasStarred ? "⭐" : ""}</div>`,
+    ">${count}</div>`,
     className: "coffee-cluster-icon",
     iconSize: L.point(40, 40),
     iconAnchor: L.point(20, 20),
