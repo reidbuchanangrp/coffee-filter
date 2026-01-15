@@ -13,7 +13,9 @@ const PLACEHOLDER_IMAGE = "https://placehold.co/150x150/e2e8f0/64748b?text=☕";
 function getImageUrl(backendShop: any): string {
   if (backendShop.photo_reference) {
     // Use backend proxy endpoint for fresh Google Places photo URLs
-    return `${API_BASE_URL}/photos/${backendShop.photo_reference}?maxwidth=400`;
+    // URL-encode the photo_reference as it contains special characters
+    const encodedRef = encodeURIComponent(backendShop.photo_reference);
+    return `${API_BASE_URL}/photos/${encodedRef}?maxwidth=400`;
   }
   return backendShop.image || PLACEHOLDER_IMAGE;
 }
