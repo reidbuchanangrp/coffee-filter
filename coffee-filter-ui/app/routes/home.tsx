@@ -108,16 +108,20 @@ export default function Home() {
     [setSearchParams]
   );
 
-  // Update URL when shop is selected
+  // Update URL when shop is selected (preserving view param)
   const handleSelectShop = useCallback(
     (shop: CoffeeShop | null) => {
       setSelectedShop(shop);
-      if (shop) {
-        const slug = createSlug(shop.id, shop.name);
-        setSearchParams({ shop: slug });
-      } else {
-        setSearchParams({});
-      }
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (shop) {
+          const slug = createSlug(shop.id, shop.name);
+          newParams.set("shop", slug);
+        } else {
+          newParams.delete("shop");
+        }
+        return newParams;
+      });
     },
     [setSearchParams]
   );
@@ -305,6 +309,11 @@ export default function Home() {
           searchCenter={searchCenter}
           initialView={initialMapView}
           onViewChange={handleMapViewChange}
+          selectedShopCenter={
+            selectedShop
+              ? [selectedShop.latitude, selectedShop.longitude]
+              : undefined
+          }
         />
         {selectedShop && (
           <>

@@ -214,6 +214,7 @@ interface CoffeeShopMapClientProps {
   searchCenter?: [number, number] | null;
   initialView?: { lat: number; lng: number; zoom: number } | null;
   onViewChange?: (lat: number, lng: number, zoom: number) => void;
+  selectedShopCenter?: [number, number];
 }
 
 export function CoffeeShopMapClient({
@@ -223,13 +224,14 @@ export function CoffeeShopMapClient({
   searchCenter,
   initialView,
   onViewChange,
+  selectedShopCenter,
 }: CoffeeShopMapClientProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
-  // Request user's location on mount (only if no initialView from URL)
+  // Request user's location on mount (only if no initialView and no selected shop)
   useEffect(() => {
-    if (initialView) return; // Skip geolocation if we have a saved view
+    if (initialView || selectedShopCenter) return; // Skip geolocation if we have a saved view or selected shop
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -243,17 +245,19 @@ export function CoffeeShopMapClient({
         }
       );
     }
-  }, [initialView]);
+  }, [initialView, selectedShopCenter]);
 
-  // Priority: URL saved view > user location > first coffee shop > default (Kansas City)
+  // Priority: URL saved view > selected shop > user location > first coffee shop > default (Kansas City)
   const center: [number, number] = initialView
     ? [initialView.lat, initialView.lng]
-    : userLocation
-      ? userLocation
-      : coffeeShops.length > 0
-        ? [coffeeShops[0].latitude, coffeeShops[0].longitude]
-        : [39.0997, -94.5786];
-  const zoom = initialView?.zoom ?? 12;
+    : selectedShopCenter
+      ? selectedShopCenter
+      : userLocation
+        ? userLocation
+        : coffeeShops.length > 0
+          ? [coffeeShops[0].latitude, coffeeShops[0].longitude]
+          : [39.0997, -94.5786];
+  const zoom = initialView?.zoom ?? 14; // Use zoom 14 for selected shop for better detail
 
   return (
     <MapContainer
@@ -265,8 +269,8 @@ export function CoffeeShopMapClient({
     >
       <MapViewTracker onViewChange={onViewChange} />
       {searchCenter && <RecenterMap center={searchCenter} />}
-      {/* Only recenter to user location if no saved view from URL */}
-      {!searchCenter && !initialView && userLocation && (
+      {/* Only recenter to user location if no saved view, no search, and no selected shop */}
+      {!searchCenter && !initialView && !selectedShopCenter && userLocation && (
         <RecenterMap center={userLocation} />
       )}
       {userLocation && (

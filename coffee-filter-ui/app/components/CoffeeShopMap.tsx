@@ -9,6 +9,7 @@ interface CoffeeShopMapProps {
   isOpen?: boolean;
   initialView?: { lat: number; lng: number; zoom: number } | null;
   onViewChange?: (lat: number, lng: number, zoom: number) => void;
+  selectedShopCenter?: [number, number];
 }
 
 export function CoffeeShopMap({
@@ -19,6 +20,7 @@ export function CoffeeShopMap({
   isOpen,
   initialView,
   onViewChange,
+  selectedShopCenter,
 }: CoffeeShopMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<{
     coffeeShops: CoffeeShop[];
@@ -28,6 +30,7 @@ export function CoffeeShopMap({
     isOpen?: boolean;
     initialView?: { lat: number; lng: number; zoom: number } | null;
     onViewChange?: (lat: number, lng: number, zoom: number) => void;
+    selectedShopCenter?: [number, number];
   }> | null>(null);
 
   useEffect(() => {
@@ -54,6 +57,7 @@ export function CoffeeShopMap({
       isOpen={isOpen}
       initialView={initialView}
       onViewChange={onViewChange}
+      selectedShopCenter={selectedShopCenter}
     />
   );
 }
