@@ -363,13 +363,7 @@ export function EditCoffeeShopDialog({
                 type="url"
                 value={formData.image}
                 onChange={(e) =>
-                  // Clear photoReference when manually setting image URL
-                  // so the new URL takes precedence
-                  setFormData({
-                    ...formData,
-                    image: e.target.value,
-                    photoReference: undefined,
-                  })
+                  setFormData({ ...formData, image: e.target.value })
                 }
                 placeholder="https://example.com/image.jpg"
                 data-testid="edit-input-image"

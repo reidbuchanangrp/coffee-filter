@@ -1,6 +1,4 @@
-import os
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.database import get_db
@@ -9,9 +7,6 @@ from app.core.auth import get_current_admin_user
 from app.models.coffee_shop import CoffeeShop
 from app.models.user import User
 from app.schemas.coffee_shop import CoffeeShop as CoffeeShopSchema, CoffeeShopCreate, CoffeeShopUpdate
-
-# Google Places API key for photo proxy
-GOOGLE_PLACES_API_KEY = os.getenv("GOOGLE_PLACES_API_KEY", "")
 
 router = APIRouter()
 
@@ -82,7 +77,6 @@ async def create_coffee_shop(
         latitude=latitude,
         longitude=longitude,
         image=shop.image,
-        photo_reference=shop.photo_reference,
         accessibility=shop.accessibility,
         has_wifi=shop.has_wifi,
         description=shop.description,
@@ -114,11 +108,6 @@ async def update_coffee_shop(
     
     # Update only provided fields
     update_data = shop.model_dump(exclude_unset=True)
-    
-    # Handle explicit null for photo_reference (to allow clearing it)
-    # We need to use model_fields_set to check if it was explicitly provided
-    if "photo_reference" in shop.model_fields_set:
-        update_data["photo_reference"] = shop.photo_reference
     
     # Serialize weekly_hours if present
     if "weekly_hours" in update_data and update_data["weekly_hours"] is not None:
@@ -187,29 +176,4 @@ def search_coffee_shops_by_location(
             filtered_shops.append(shop)
     
     return filtered_shops
-
-
-@router.get("/photos/{photo_reference}")
-def get_google_photo(photo_reference: str, maxwidth: int = 400):
-    """
-    Proxy endpoint for Google Places photos.
-    Generates a fresh signed URL from the stored photo_reference.
-    This keeps the API key server-side and ensures URLs never expire.
-    """
-    if not GOOGLE_PLACES_API_KEY:
-        raise HTTPException(
-            status_code=500, 
-            detail="Google Places API key not configured"
-        )
-    
-    # Generate fresh Google Places photo URL
-    photo_url = (
-        f"https://maps.googleapis.com/maps/api/place/photo"
-        f"?maxwidth={maxwidth}"
-        f"&photo_reference={photo_reference}"
-        f"&key={GOOGLE_PLACES_API_KEY}"
-    )
-    
-    # Redirect to the fresh Google URL
-    return RedirectResponse(url=photo_url, status_code=302)
 

@@ -249,13 +249,7 @@ def create_shop_data(place: dict, details: dict) -> dict:
     """Convert Google Places data to our shop format."""
     location = place.get("geometry", {}).get("location", {})
     
-    # Get photo_reference if available (stored for generating fresh URLs via backend proxy)
-    photo_reference = None
-    photos = place.get("photos") or details.get("photos")
-    if photos and len(photos) > 0:
-        photo_reference = photos[0].get("photo_reference", "")
-    
-    # Set image URL - will be populated by frontend using the photo_reference
+    # Use placeholder image - upload to Cloudinary manually for permanent URLs
     image_url = "https://placehold.co/150x150/e2e8f0/64748b?text=☕"
     
     # Parse weekly hours if available
@@ -284,7 +278,6 @@ def create_shop_data(place: dict, details: dict) -> dict:
         "latitude": location.get("lat"),
         "longitude": location.get("lng"),
         "image": image_url,
-        "photo_reference": photo_reference,  # Stored for generating fresh Google Places photo URLs
         "website": details.get("website"),
         "description": details.get("editorial_summary", {}).get("overview", ""),
         "has_wifi": True,  # Assume true, can be edited later

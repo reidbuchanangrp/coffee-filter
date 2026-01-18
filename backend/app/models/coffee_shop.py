@@ -10,7 +10,6 @@ class CoffeeShop(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     image = Column(String)
-    photo_reference = Column(String, nullable=True)  # Google Places photo_reference for generating fresh URLs
     accessibility = Column(Boolean, default=False)
     has_wifi = Column(Boolean, default=False)
     description = Column(String)

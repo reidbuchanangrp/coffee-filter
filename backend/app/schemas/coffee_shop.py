@@ -16,7 +16,6 @@ class CoffeeShopBase(BaseModel):
     latitude: float
     longitude: float
     image: str
-    photo_reference: Optional[str] = None  # Google Places photo_reference for fresh URLs
     accessibility: bool = False
     has_wifi: bool = False
     description: str
@@ -36,7 +35,6 @@ class CoffeeShopCreate(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     image: str = "https://placehold.co/150x150/e2e8f0/64748b?text=☕"
-    photo_reference: Optional[str] = None  # Google Places photo_reference for fresh URLs
     accessibility: bool = False
     has_wifi: bool = False
     description: str = ""
@@ -56,7 +54,6 @@ class CoffeeShopUpdate(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     image: Optional[str] = None
-    photo_reference: Optional[str] = None
     accessibility: Optional[bool] = None
     has_wifi: Optional[bool] = None
     description: Optional[str] = None
