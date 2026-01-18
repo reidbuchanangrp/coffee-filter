@@ -7,6 +7,8 @@ interface CoffeeShopMapProps {
   onMarkerClick: (shop: CoffeeShop) => void;
   searchCenter?: [number, number] | null;
   isOpen?: boolean;
+  initialView?: { lat: number; lng: number; zoom: number } | null;
+  onViewChange?: (lat: number, lng: number, zoom: number) => void;
 }
 
 export function CoffeeShopMap({
@@ -15,6 +17,8 @@ export function CoffeeShopMap({
   onMarkerClick,
   searchCenter,
   isOpen,
+  initialView,
+  onViewChange,
 }: CoffeeShopMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<{
     coffeeShops: CoffeeShop[];
@@ -22,6 +26,8 @@ export function CoffeeShopMap({
     onMarkerClick: (shop: CoffeeShop) => void;
     searchCenter?: [number, number] | null;
     isOpen?: boolean;
+    initialView?: { lat: number; lng: number; zoom: number } | null;
+    onViewChange?: (lat: number, lng: number, zoom: number) => void;
   }> | null>(null);
 
   useEffect(() => {
@@ -46,6 +52,8 @@ export function CoffeeShopMap({
       onMarkerClick={onMarkerClick}
       searchCenter={searchCenter}
       isOpen={isOpen}
+      initialView={initialView}
+      onViewChange={onViewChange}
     />
   );
 }

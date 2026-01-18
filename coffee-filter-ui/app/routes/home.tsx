@@ -31,6 +31,20 @@ function getIdFromSlug(slug: string): number | null {
   return match ? parseInt(match[1], 10) : null;
 }
 
+// Parse map view from URL params (format: "lat,lng,zoom")
+function parseMapView(
+  viewParam: string | null
+): { lat: number; lng: number; zoom: number } | null {
+  if (!viewParam) return null;
+  const parts = viewParam.split(",");
+  if (parts.length !== 3) return null;
+  const lat = parseFloat(parts[0]);
+  const lng = parseFloat(parts[1]);
+  const zoom = parseInt(parts[2], 10);
+  if (isNaN(lat) || isNaN(lng) || isNaN(zoom)) return null;
+  return { lat, lng, zoom };
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "CoffeeFilter - Find Great Coffee Shops Near You" },
@@ -74,6 +88,24 @@ export default function Home() {
   >(undefined);
   const [searchCenter, setSearchCenter] = useState<[number, number] | null>(
     null
+  );
+
+  // Parse initial map view from URL
+  const initialMapView = useMemo(() => {
+    return parseMapView(searchParams.get("view"));
+  }, []); // Only parse once on mount
+
+  // Update URL when map view changes (debounced in map component)
+  const handleMapViewChange = useCallback(
+    (lat: number, lng: number, zoom: number) => {
+      const viewString = `${lat.toFixed(4)},${lng.toFixed(4)},${zoom}`;
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("view", viewString);
+        return newParams;
+      });
+    },
+    [setSearchParams]
   );
 
   // Update URL when shop is selected
@@ -271,6 +303,8 @@ export default function Home() {
           selectedShopId={selectedShop?.id ?? 0}
           onMarkerClick={handleSelectShop}
           searchCenter={searchCenter}
+          initialView={initialMapView}
+          onViewChange={handleMapViewChange}
         />
         {selectedShop && (
           <>
