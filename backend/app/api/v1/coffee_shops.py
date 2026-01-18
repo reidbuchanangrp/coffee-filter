@@ -115,6 +115,11 @@ async def update_coffee_shop(
     # Update only provided fields
     update_data = shop.model_dump(exclude_unset=True)
     
+    # Handle explicit null for photo_reference (to allow clearing it)
+    # We need to use model_fields_set to check if it was explicitly provided
+    if "photo_reference" in shop.model_fields_set:
+        update_data["photo_reference"] = shop.photo_reference
+    
     # Serialize weekly_hours if present
     if "weekly_hours" in update_data and update_data["weekly_hours"] is not None:
         update_data["weekly_hours"] = serialize_weekly_hours(update_data["weekly_hours"])
