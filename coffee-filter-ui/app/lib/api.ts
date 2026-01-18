@@ -70,8 +70,9 @@ function transformToBackend(frontendShop: Partial<CoffeeShop>): any {
   if (frontendShop.longitude !== undefined)
     result.longitude = frontendShop.longitude;
   if (frontendShop.image !== undefined) result.image = frontendShop.image;
-  if (frontendShop.photoReference !== undefined)
-    result.photo_reference = frontendShop.photoReference;
+  // Send null to clear photo_reference when manually setting image
+  if ("photoReference" in frontendShop)
+    result.photo_reference = frontendShop.photoReference ?? null;
   if (frontendShop.accessibility !== undefined)
     result.accessibility = frontendShop.accessibility;
   if (frontendShop.hasWifi !== undefined)

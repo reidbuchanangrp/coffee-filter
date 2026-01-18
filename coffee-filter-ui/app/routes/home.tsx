@@ -95,9 +95,8 @@ export default function Home() {
     const slug = searchParams.get("shop");
     if (slug && coffeeShops.length > 0) {
       const shopId = getIdFromSlug(slug);
-      const shop = shopId !== null 
-        ? coffeeShops.find((s) => s.id === shopId)
-        : null;
+      const shop =
+        shopId !== null ? coffeeShops.find((s) => s.id === shopId) : null;
       setSelectedShop(shop || null);
     } else if (!slug) {
       setSelectedShop(null);
@@ -115,9 +114,8 @@ export default function Home() {
       const slug = searchParams.get("shop");
       if (slug) {
         const shopId = getIdFromSlug(slug);
-        const shop = shopId !== null 
-          ? shops.find((s) => s.id === shopId)
-          : null;
+        const shop =
+          shopId !== null ? shops.find((s) => s.id === shopId) : null;
         if (shop) {
           setSelectedShop(shop);
         }

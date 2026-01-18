@@ -7,7 +7,11 @@ import { useEffect, useState, memo, useMemo } from "react";
 import { isCurrentlyOpen } from "./WeeklyHoursInput";
 
 // Memoized popup content - calculates isCurrentlyOpen once per shop
-const PopupContent = memo(function PopupContent({ shop }: { shop: CoffeeShop }) {
+const PopupContent = memo(function PopupContent({
+  shop,
+}: {
+  shop: CoffeeShop;
+}) {
   const isOpen = useMemo(
     () => isCurrentlyOpen(shop.weeklyHours || {}),
     [shop.weeklyHours]
