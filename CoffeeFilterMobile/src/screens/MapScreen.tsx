@@ -1,25 +1,17 @@
 // src/screens/MapScreen.tsx
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import { useShops } from '../../hooks/useShops';
 import type { CoffeeShop } from '../lib/types';
-import { ShopPreviewCard } from '../components/ShopPreviewCard';
 import { ShopDetailScreen } from './ShopDetailScreen';
 import { ShopMarker } from '../components/ShopMarker';
 
-// BEST PRACTICE: Build lookup Map for O(1) access (same as web!)
-function useShopById(shops: CoffeeShop[]) {
-  return useMemo(
-    () => new Map(shops.map((shop) => [shop.id, shop])),
-    [shops]
-  );
-}
-
 export function MapScreen() {
-  const { shops, loading, error, refetch } = useShops();
-  const [selectedShopId, setSelectedShopId] = useState<number | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
+  const { shops, loading, error } = useShops();
+  const [selectedShop, setSelectedShop] = useState<CoffeeShop | null>(null);
+  const [lastViewedShopId, setLastViewedShopId] = useState<number | null>(null);
+  const [showCalloutTrigger, setShowCalloutTrigger] = useState(0);
   const [region, setRegion] = useState<Region>({
     latitude: 39.0997,
     longitude: -94.5786,
@@ -27,30 +19,15 @@ export function MapScreen() {
     longitudeDelta: 0.1,
   });
 
-  const shopById = useShopById(shops);
-  const selectedShop = selectedShopId ? shopById.get(selectedShopId) : null;
-
-  // BEST PRACTICE: useCallback for handlers passed to children
-  const handleMarkerPress = useCallback((shop: CoffeeShop) => {
-    setSelectedShopId(shop.id);
-    // Center map on selected shop
-    setRegion((prev) => ({
-      ...prev,
-      latitude: shop.latitude,
-      longitude: shop.longitude,
-    }));
-  }, []);
-
-  const handleClosePreview = useCallback(() => {
-    setSelectedShopId(null);
-  }, []);
-
-  const handleViewDetails = useCallback(() => {
-    setShowDetail(true);
+  const handleCalloutPress = useCallback((shop: CoffeeShop) => {
+    setLastViewedShopId(shop.id);
+    setSelectedShop(shop);
   }, []);
 
   const handleCloseDetail = useCallback(() => {
-    setShowDetail(false);
+    setSelectedShop(null);
+    // Increment trigger to cause the callout to show
+    setShowCalloutTrigger(prev => prev + 1);
   }, []);
 
   if (loading) {
@@ -70,8 +47,8 @@ export function MapScreen() {
     );
   }
 
-  // Show full detail screen if selected
-  if (showDetail && selectedShop) {
+  // Show full detail screen if a shop is selected
+  if (selectedShop) {
     return (
       <ShopDetailScreen
         shop={selectedShop}
@@ -93,19 +70,11 @@ export function MapScreen() {
           <ShopMarker
             key={shop.id}
             shop={shop}
-            isSelected={selectedShopId === shop.id}
-            onPress={() => handleMarkerPress(shop)}
+            onCalloutPress={() => handleCalloutPress(shop)}
+            showCallout={lastViewedShopId === shop.id ? showCalloutTrigger : 0}
           />
         ))}
       </MapView>
-
-      {selectedShop && (
-        <ShopPreviewCard
-          shop={selectedShop}
-          onClose={handleClosePreview}
-          onViewDetails={handleViewDetails}
-        />
-      )}
     </View>
   );
 }
