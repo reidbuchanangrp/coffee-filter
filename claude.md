@@ -118,6 +118,31 @@ docker-compose up
 - `backend/app/models/coffee_shop.py` - Database model
 - `backend/app/schemas/coffee_shop.py` - Request/response schemas
 
+## Documentation Practice
+
+For every project, write a detailed `FOR[yourname].md` file that explains the whole project in plain language.
+
+**What to include:**
+
+- **Technical Architecture**: How the system is designed and why. Explain the frontend/backend split, how data flows, and the mental model behind it.
+
+- **Codebase Structure**: How the various parts connect. Don't just list folders—explain the relationships. Why does the API client live in `lib/`? How do components talk to the backend?
+
+- **Technology Choices**: What we're using and *why we chose it*. React Router for SSR capabilities, FastAPI for speed and type safety, Leaflet because it's lightweight and open-source.
+
+- **Lessons Learned**: This is the gold. Document:
+  - Bugs encountered and how they were fixed (e.g., "Map markers weren't updating because React was memoizing stale coordinates")
+  - Potential pitfalls and how to avoid them (e.g., "Always transform snake_case to camelCase at the API boundary, not in components")
+  - New technologies explored and what made them click
+  - Patterns that good engineers use and why they work
+  - Best practices discovered through trial and error
+
+**Writing style:**
+
+Make it engaging—not a boring textbook. Use analogies ("The API client is like a translator at the border between two countries with different languages"). Include anecdotes ("We spent 3 hours debugging why shops weren't showing up, only to realize the coordinates were swapped"). Write it like you're explaining to a smart friend who's new to the codebase.
+
+The goal: Future you (or anyone reading it) should genuinely enjoy learning from it and walk away with real understanding, not just information.
+
 ## Environment Variables
 
 ### Backend
