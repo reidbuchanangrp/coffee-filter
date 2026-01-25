@@ -3,10 +3,20 @@ import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
 import { getCoffeeShops, deleteCoffeeShop, updateCoffeeShop } from "../lib/api";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, lazy, Suspense } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
-import { AddCoffeeShopDialog } from "../components/AddCoffeeShopDialog";
-import { EditCoffeeShopDialog } from "../components/EditCoffeeShopDialog";
+
+// Lazy load admin-only dialogs to reduce bundle size for non-admin users
+const AddCoffeeShopDialog = lazy(() =>
+  import("../components/AddCoffeeShopDialog").then((m) => ({
+    default: m.AddCoffeeShopDialog,
+  }))
+);
+const EditCoffeeShopDialog = lazy(() =>
+  import("../components/EditCoffeeShopDialog").then((m) => ({
+    default: m.EditCoffeeShopDialog,
+  }))
+);
 import { useAuth } from "../lib/AuthContext";
 import { HamburgerMenu } from "../components/HamburgerMenu";
 import { LocationSearch } from "../components/LocationSearch";
@@ -89,11 +99,18 @@ export default function Home() {
   const [searchCenter, setSearchCenter] = useState<[number, number] | null>(
     null
   );
+  
 
   // Parse initial map view from URL
   const initialMapView = useMemo(() => {
     return parseMapView(searchParams.get("view"));
   }, []); // Only parse once on mount
+
+  // Build shop lookup Map for O(1) lookups by ID
+  const shopById = useMemo(
+    () => new Map(coffeeShops.map((shop) => [shop.id, shop])),
+    [coffeeShops]
+  );
 
   // Update URL when map view changes (debounced in map component)
   const handleMapViewChange = useCallback(
@@ -129,15 +146,14 @@ export default function Home() {
   // Handle browser back/forward navigation via search params
   useEffect(() => {
     const slug = searchParams.get("shop");
-    if (slug && coffeeShops.length > 0) {
+    if (slug && shopById.size > 0) {
       const shopId = getIdFromSlug(slug);
-      const shop =
-        shopId !== null ? coffeeShops.find((s) => s.id === shopId) : null;
+      const shop = shopId !== null ? shopById.get(shopId) : null;
       setSelectedShop(shop || null);
     } else if (!slug) {
       setSelectedShop(null);
     }
-  }, [searchParams, coffeeShops]);
+  }, [searchParams, shopById]);
 
   const fetchCoffeeShops = async () => {
     try {
