@@ -105,14 +105,14 @@ export function EditCoffeeShopDialog({
       const updateData: Partial<CoffeeShop> = {
         name: formData.name,
         address: formData.address,
-        image: formData.image || undefined,
+        image: formData.image || null,
         machine: formData.machine,
         accessibility: formData.accessibility,
         hasWifi: formData.hasWifi,
         description: formData.description,
         weeklyHours: formData.weeklyHours,
-        website: formData.website || undefined,
-        instagram: formatInstagramUrl(formData.instagram),
+        website: formData.website || null,
+        instagram: formatInstagramUrl(formData.instagram) || null,
         pourOver: formData.pourOver,
         starred: formData.starred,
       };

@@ -20,9 +20,9 @@ interface InitialShopData {
   name?: string;
   description?: string;
   machine?: string;
-  website?: string;
-  instagram?: string;
-  image?: string;
+  website?: string | null;
+  instagram?: string | null;
+  image?: string | null;
   accessibility?: boolean;
   hasWifi?: boolean;
   pourOver?: boolean;

@@ -19,14 +19,14 @@ export interface CoffeeShop {
   address: string;
   latitude: number;
   longitude: number;
-  image: string;
+  image: string | null;
   accessibility: boolean;
   hasWifi: boolean;
   description: string;
   machine: string;
   weeklyHours: WeeklyHours;
   pourOver: boolean;
-  website?: string;
-  instagram?: string;
+  website?: string | null;
+  instagram?: string | null;
   starred: boolean;
 }
