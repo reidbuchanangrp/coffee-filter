@@ -1,4 +1,4 @@
-import { Menu, Info, Coffee } from "lucide-react";
+import { Menu, Info, Coffee, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "./ui/button";
 import {
@@ -37,6 +37,12 @@ export function HamburgerMenu() {
             <Link to="/about">
               <Info className="h-4 w-4 mr-3" />
               About
+            </Link>
+          </Button>
+          <Button variant="ghost" className="justify-start" asChild>
+            <Link to="/suggestion">
+              <MessageCircle className="h-4 w-4 mr-3" />
+              Suggest a Coffee Shop
             </Link>
           </Button>
         </nav>

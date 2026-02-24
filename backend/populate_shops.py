@@ -92,6 +92,7 @@ US_CITIES = [
     ("Columbus", "OH", 39.9612, -82.9988),
     ("Indianapolis", "IN", 39.7684, -86.1581),
     ("Little Rock", "AR", 34.7465, -92.2896),
+    ("Madison", "WI", 43.0731, -89.4012),
     
     # South
     ("Atlanta", "GA", 33.7490, -84.3880),
@@ -103,6 +104,7 @@ US_CITIES = [
     ("Charleston", "SC", 32.7765, -79.9311),
     ("Savannah", "GA", 32.0809, -81.0912),
     ("Jacksonville", "FL", 30.3322, -81.6557),
+    ("Orlando", "FL", 28.5383, -81.3792),
     
     # Southwest
     ("Phoenix", "AZ", 33.4484, -112.0740),

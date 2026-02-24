@@ -5,13 +5,11 @@ import {
   Clock,
   Wifi,
   Accessibility,
-  MessageCircle,
 } from "lucide-react";
 import { Link } from "react-router";
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
-import { ContactFormDialog } from "../components/ContactFormDialog";
 import type { Route } from "./+types/about";
 
 export function meta({}: Route.MetaArgs) {
@@ -26,8 +24,6 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function About() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-background">
       <header className="flex items-center justify-between px-6 py-3 border-b bg-primary">
@@ -127,30 +123,6 @@ export default function About() {
               </p>
             </Card>
           </div>
-
-          <Card
-            className="p-6 space-y-4 bg-primary/5 border-primary/20 cursor-pointer hover:bg-primary/10 transition-colors"
-            onClick={() => setIsContactOpen(true)}
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <MessageCircle className="h-5 w-5 text-primary" />
-              </div>
-              <h2 className="text-xl font-semibold font-serif">
-                Know a great coffee shop?
-              </h2>
-            </div>
-            <p className="text-muted-foreground">
-              We're always looking to add more amazing coffee shops to our map.
-              If you know of a specialty coffee shop that should be featured, or
-              just want to say hey, let us know!
-            </p>
-          </Card>
-
-          <ContactFormDialog
-            open={isContactOpen}
-            onOpenChange={setIsContactOpen}
-          />
 
           <div className="text-center pt-4">
             <Button asChild size="lg">
