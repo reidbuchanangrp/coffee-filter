@@ -55,31 +55,59 @@ function parseMapView(
   return { lat, lng, zoom };
 }
 
-export function meta({}: Route.MetaArgs) {
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const shopSlug = url.searchParams.get("shop");
+
+  if (!shopSlug) return { shop: null };
+
+  const match = shopSlug.match(/^(\d+)-/);
+  if (!match) return { shop: null };
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/coffee-shops/${match[1]}`);
+    if (!res.ok) return { shop: null };
+    const data = await res.json();
+    return {
+      shop: {
+        name: data.name as string,
+        description: (data.description || "") as string,
+        address: (data.address || "") as string,
+        image: (data.image || "") as string,
+      },
+    };
+  } catch {
+    return { shop: null };
+  }
+}
+
+export function meta({ data }: Route.MetaArgs) {
+  const shop = data?.shop;
+
+  const title = shop
+    ? `${shop.name} - CoffeeFilter`
+    : "CoffeeFilter - Find Great Coffee Shops Near You";
+  const description = shop
+    ? shop.description || `Check out ${shop.name} at ${shop.address} on CoffeeFilter.`
+    : "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours. Find your perfect spot for great coffee.";
+  const ogTitle = shop
+    ? `${shop.name} - CoffeeFilter`
+    : "CoffeeFilter - Find Great Coffee Shops";
+
   return [
-    { title: "CoffeeFilter - Find Great Coffee Shops Near You" },
-    {
-      name: "description",
-      content:
-        "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours. Find your perfect spot for great coffee.",
-    },
-    { property: "og:title", content: "CoffeeFilter - Find Great Coffee Shops" },
-    {
-      property: "og:description",
-      content:
-        "Discover local coffee shops with detailed info on amenities, hours, and more.",
-    },
+    { title },
+    { name: "description", content: description },
+    { property: "og:title", content: ogTitle },
+    { property: "og:description", content: description },
     { property: "og:type", content: "website" },
+    ...(shop?.image ? [{ property: "og:image", content: shop.image }] : []),
     { name: "twitter:card", content: "summary_large_image" },
-    {
-      name: "twitter:title",
-      content: "CoffeeFilter - Find Great Coffee Shops",
-    },
-    {
-      name: "twitter:description",
-      content:
-        "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours.",
-    },
+    { name: "twitter:title", content: ogTitle },
+    { name: "twitter:description", content: description },
+    ...(shop?.image ? [{ name: "twitter:image", content: shop.image }] : []),
   ];
 }
 
