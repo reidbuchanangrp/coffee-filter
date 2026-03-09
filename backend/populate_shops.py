@@ -59,63 +59,67 @@ MIN_REVIEWS = 10
 # Major US cities to search (add more as needed)
 US_CITIES = [
     # Texas
-    ("Austin", "TX", 30.2672, -97.7431),
-    ("Houston", "TX", 29.7604, -95.3698),
+    
     ("Dallas", "TX", 32.7767, -96.7970),
     ("San Antonio", "TX", 29.4241, -98.4936),
     
     # California
     ("Los Angeles", "CA", 34.0522, -118.2437),
     ("San Francisco", "CA", 37.7749, -122.4194),
-    ("San Diego", "CA", 32.7157, -117.1611),
     ("Oakland", "CA", 37.8044, -122.2712),
-    ("Portland", "OR", 45.5152, -122.6784),
-    ("Seattle", "WA", 47.6062, -122.3321),
+    ("San Jose", "CA", 37.3382, -121.8863),
+    ("Santa Cruz", "CA", 36.9741, -122.0308),
+    ("Monterey", "CA", 36.6001, -121.8949),
+   ("Sacramento", "CA", 38.5816, -121.4944),
+    ("Santa Barbara", "CA", 34.4208, -119.6982),
+    ("San Luis Obispo", "CA", 35.2828, -120.6596),
+ 
+   
+
+    # Pacific Northwest
+    ("Vancouver", "BC", 49.2827, -123.1207),
+    ("Olympia", "WA", 47.0379, -122.9007),
+    ("Eugene", "OR", 44.0521, -123.0868),
+    ("Salem", "OR", 44.9429, -123.0351),
+    ("Corvallis", "OR", 44.5646, -123.2620),
+ 
     
     # East Coast
     ("New York", "NY", 40.7128, -74.0060),
     ("Brooklyn", "NY", 40.6782, -73.9442),
-    ("Boston", "MA", 42.3601, -71.0589),
-    ("Philadelphia", "PA", 39.9526, -75.1652),
-    ("Washington", "DC", 38.9072, -77.0369),
     ("Baltimore", "MD", 39.2904, -76.6122),
-    ("Pittsburgh", "PA", 40.4406, -79.9959),
-    ("New Milford", "NJ", 40.9340, -74.0091),
-    
+
     # Midwest
-    ("Chicago", "IL", 41.8781, -87.6298),
     ("Minneapolis", "MN", 44.9778, -93.2650),
-    ("Denver", "CO", 39.7392, -104.9903),
-    ("Kansas City", "MO", 39.0997, -94.5786),
-    ("St. Louis", "MO", 38.6270, -90.1994),
-    ("Detroit", "MI", 42.3314, -83.0458),
+    ("St. Paul", "MN", 44.9537, -93.0892),
+    ("Duluth", "MN", 46.7831, -92.1005),
     ("Columbus", "OH", 39.9612, -82.9988),
+    ("Cleveland", "OH", 41.4993, -81.6944),
+    ("Milwaukee", "WI", 43.0389, -87.9065),
     ("Indianapolis", "IN", 39.7684, -86.1581),
-    ("Little Rock", "AR", 34.7465, -92.2896),
-    ("Madison", "WI", 43.0731, -89.4012),
+    ("Fargo", "ND", 46.8772, -96.7898),
+
+    # Rocky Mountain
+    ("Billings", "MT", 45.7831, -108.5007),
+    ("Bozeman", "MT", 45.6769, -111.0429),
+    ("Cheyenne", "WY", 41.1393, -104.8202),
+    ("Colorado Springs", "CO", 38.8339, -104.8202),
+    ("Fort Collins", "CO", 40.5853, -105.0844),
     
     # South
-    ("Atlanta", "GA", 33.7490, -84.3880),
-    ("Miami", "FL", 25.7617, -80.1918),
     ("Nashville", "TN", 36.1627, -86.7816),
     ("New Orleans", "LA", 29.9511, -90.0715),
     ("Charlotte", "NC", 35.2271, -80.8431),
     ("Raleigh", "NC", 35.7796, -78.6382),
     ("Charleston", "SC", 32.7765, -79.9311),
     ("Savannah", "GA", 32.0809, -81.0912),
-    ("Jacksonville", "FL", 30.3322, -81.6557),
-    ("Orlando", "FL", 28.5383, -81.3792),
     
     # Southwest
-    ("Phoenix", "AZ", 33.4484, -112.0740),
     ("Tucson", "AZ", 32.2226, -110.9747),
     ("Albuquerque", "NM", 35.0844, -106.6504),
-    ("Salt Lake City", "UT", 40.7608, -111.8910),
     ("Las Vegas", "NV", 36.1699, -115.1398),
     
-    # Oklahoma (since you have OKC shops)
-    ("Oklahoma City", "OK", 35.4676, -97.5164),
-    ("Tulsa", "OK", 36.1540, -95.9928),
+    
 ]
 
 # =============================================================================

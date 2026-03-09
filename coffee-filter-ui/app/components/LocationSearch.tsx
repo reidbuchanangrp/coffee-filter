@@ -202,7 +202,7 @@ export function LocationSearch({
           onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-7 h-9 bg-background/80 max-w-[200px] text-ellipsis focus:placeholder:opacity-0"
+          className="pl-7 h-11 bg-background/80 max-w-[200px] text-ellipsis focus:placeholder:opacity-0"
           role="combobox"
           aria-expanded={isSearchOpen}
           aria-haspopup="listbox"
@@ -216,7 +216,7 @@ export function LocationSearch({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-0 h-9 w-9 hover:bg-transparent"
+            className="absolute right-0 h-11 w-11 hover:bg-transparent"
             onClick={handleClear}
           >
             <X className="h-4 w-4 text-muted-foreground" />
@@ -243,7 +243,7 @@ export function LocationSearch({
               aria-selected={index === highlightedIndex}
               onClick={() => handleSelect(suggestion)}
               onMouseEnter={() => setHighlightedIndex(index)}
-              className={`flex items-start gap-2 px-3 py-2  text-sm ${
+              className={`flex items-start gap-2 px-3 py-3 text-sm ${
                 index === highlightedIndex ? "bg-accent" : "hover:bg-accent"
               }`}
             >

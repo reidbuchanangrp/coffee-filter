@@ -175,7 +175,7 @@ export function WeeklyHoursInput({ value, onChange }: WeeklyHoursInputProps) {
                       e.stopPropagation();
                       applyToAll(day.key);
                     }}
-                    className="text-xs text-primary hover:text-primary/80 hover:underline ml-auto px-2 py-1"
+                    className="text-xs text-primary hover:text-primary/80 hover:underline ml-auto px-3 py-2 min-h-11"
                     title="Apply these hours to all open days"
                   >
                     Apply to all
