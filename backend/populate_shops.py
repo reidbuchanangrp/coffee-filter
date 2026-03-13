@@ -64,7 +64,6 @@ US_CITIES = [
     ("San Antonio", "TX", 29.4241, -98.4936),
     
     # California
-    ("Los Angeles", "CA", 34.0522, -118.2437),
     ("San Francisco", "CA", 37.7749, -122.4194),
     ("Oakland", "CA", 37.8044, -122.2712),
     ("San Jose", "CA", 37.3382, -121.8863),
@@ -73,6 +72,7 @@ US_CITIES = [
    ("Sacramento", "CA", 38.5816, -121.4944),
     ("Santa Barbara", "CA", 34.4208, -119.6982),
     ("San Luis Obispo", "CA", 35.2828, -120.6596),
+    ("San Clemente", "CA", 33.4269, -117.6118),
  
    
 
@@ -85,9 +85,9 @@ US_CITIES = [
  
     
     # East Coast
-    ("New York", "NY", 40.7128, -74.0060),
-    ("Brooklyn", "NY", 40.6782, -73.9442),
-    ("Baltimore", "MD", 39.2904, -76.6122),
+    
+    ("Richmond", "VA", 37.5407, -77.4360),
+    ("Virginia Beach", "VA", 36.8529, -75.9776),
 
     # Midwest
     ("Minneapolis", "MN", 44.9778, -93.2650),
