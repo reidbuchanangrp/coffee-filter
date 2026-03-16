@@ -2,6 +2,7 @@ import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
         description: "Find specialty coffee shops in Kansas City",
         theme_color: "#ffffff",
         icons: [
+          { src: "/favicon.svg", sizes: "192x192", type: "image/svg+xml" },
           { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
         ],
