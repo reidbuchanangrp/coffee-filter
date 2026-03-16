@@ -229,9 +229,8 @@ export function CoffeeShopMapClient({
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
-  // Request user's location on mount (only if no initialView and no selected shop)
+  // Always request user's location on mount (for the blue dot marker)
   useEffect(() => {
-    if (initialView || selectedShopCenter) return; // Skip geolocation if we have a saved view or selected shop
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -245,7 +244,7 @@ export function CoffeeShopMapClient({
         }
       );
     }
-  }, [initialView, selectedShopCenter]);
+  }, []);
 
   // Priority: URL saved view > selected shop > user location > first coffee shop > default (Kansas City)
   const center: [number, number] = initialView
