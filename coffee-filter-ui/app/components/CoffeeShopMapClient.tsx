@@ -263,6 +263,10 @@ export function CoffeeShopMapClient({
       center={center}
       zoom={zoom}
       minZoom={1}
+      maxBounds={[
+        [-90, -180],
+        [90, 180],
+      ]}
       className="h-full w-full"
       scrollWheelZoom={true}
       zoomControl={true}
