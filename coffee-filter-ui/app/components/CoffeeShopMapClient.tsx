@@ -263,6 +263,7 @@ export function CoffeeShopMapClient({
       center={center}
       zoom={zoom}
       minZoom={1}
+      worldCopyJump={false}
       maxBounds={[
         [-90, -180],
         [90, 180],
