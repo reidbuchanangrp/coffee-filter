@@ -14,7 +14,7 @@ const PopupContent = memo(function PopupContent({
 }) {
   const isOpen = useMemo(
     () => isCurrentlyOpen(shop.weeklyHours || {}),
-    [shop.weeklyHours]
+    [shop.weeklyHours],
   );
 
   return (
@@ -127,7 +127,7 @@ const createClusterIcon = (cluster: {
   const count = cluster.getChildCount();
   const childMarkers = cluster.getAllChildMarkers();
   const hasStarred = childMarkers.some(
-    (marker) => (marker.options as any).shopStarred === true
+    (marker) => (marker.options as any).shopStarred === true,
   );
 
   return L.divIcon({
@@ -227,7 +227,7 @@ export function CoffeeShopMapClient({
   selectedShopCenter,
 }: CoffeeShopMapClientProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
-    null
+    null,
   );
   // Always request user's location on mount (for the blue dot marker)
   useEffect(() => {
@@ -241,7 +241,7 @@ export function CoffeeShopMapClient({
         },
         (error) => {
           console.log("Geolocation denied or unavailable:", error.message);
-        }
+        },
       );
     }
   }, []);
@@ -262,6 +262,7 @@ export function CoffeeShopMapClient({
     <MapContainer
       center={center}
       zoom={zoom}
+      minZoom={1}
       className="h-full w-full"
       scrollWheelZoom={true}
       zoomControl={true}

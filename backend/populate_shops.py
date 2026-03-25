@@ -86,8 +86,7 @@ US_CITIES = [
     
     # East Coast
     
-    ("Richmond", "VA", 37.5407, -77.4360),
-    ("Virginia Beach", "VA", 36.8529, -75.9776),
+    
 
     # Midwest
     ("Minneapolis", "MN", 44.9778, -93.2650),
@@ -109,9 +108,6 @@ US_CITIES = [
     # South
     ("Nashville", "TN", 36.1627, -86.7816),
     ("New Orleans", "LA", 29.9511, -90.0715),
-    ("Charlotte", "NC", 35.2271, -80.8431),
-    ("Raleigh", "NC", 35.7796, -78.6382),
-    ("Charleston", "SC", 32.7765, -79.9311),
     ("Savannah", "GA", 32.0809, -81.0912),
     
     # Southwest
