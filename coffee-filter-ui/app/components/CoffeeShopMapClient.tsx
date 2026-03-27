@@ -291,6 +291,7 @@ export function CoffeeShopMapClient({
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
       <MarkerClusterGroup
+        key={coffeeShops.map((s) => s.id).join(",")}
         iconCreateFunction={createClusterIcon}
         maxClusterRadius={50}
         spiderfyOnMaxZoom={true}
