@@ -65,7 +65,7 @@ export function LocationSearch({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`,
       );
       const data = await response.json();
       setSuggestions(data.features || []);
@@ -112,13 +112,13 @@ export function LocationSearch({
       case "ArrowDown":
         e.preventDefault();
         setHighlightedIndex((prev) =>
-          prev < suggestions.length - 1 ? prev + 1 : 0
+          prev < suggestions.length - 1 ? prev + 1 : 0,
         );
         break;
       case "ArrowUp":
         e.preventDefault();
         setHighlightedIndex((prev) =>
-          prev > 0 ? prev - 1 : suggestions.length - 1
+          prev > 0 ? prev - 1 : suggestions.length - 1,
         );
         break;
       case "Enter":
@@ -212,7 +212,7 @@ export function LocationSearch({
               : undefined
           }
         />
-        {value && (
+        {value ? (
           <Button
             variant="ghost"
             size="icon"
@@ -221,12 +221,11 @@ export function LocationSearch({
           >
             <X className="h-4 w-4 text-muted-foreground" />
           </Button>
-        )}
-        {isLoading && (
+        ) : isLoading ? (
           <div className="absolute right-2.5">
             <div className="h-4 w-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
           </div>
-        )}
+        ) : null}
       </div>
 
       {isSearchOpen && suggestions.length > 0 && (
