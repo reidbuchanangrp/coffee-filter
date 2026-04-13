@@ -39,7 +39,7 @@ EXCLUDE_CHAINS = [
     "mcdonald's", "mcdonalds", "panera", "tim hortons", "coffee bean & tea leaf",
     "pj's coffee", "black rock coffee", "human bean", "gloria jean's",
     "it's a grind", "coffee beanery", "aroma joe's", "ziggi's",
-    "blank street"  # Some consider these chains now
+    "blank street", "7 brew coffee"  # Some consider these chains now
 ]
 
 # Keywords that indicate non-specialty places (lowercase)
@@ -61,7 +61,6 @@ US_CITIES = [
     # Texas
     
     ("Dallas", "TX", 32.7767, -96.7970),
-    ("San Antonio", "TX", 29.4241, -98.4936),
     
     # California
     ("San Francisco", "CA", 37.7749, -122.4194),
@@ -85,7 +84,8 @@ US_CITIES = [
  
     
     # East Coast
-    
+    ("Buffalo", "NY", 42.8864, -78.8784),
+  
     
 
     # Midwest

@@ -89,7 +89,7 @@ export function AddCoffeeShopDialog({
   };
 
   const [formData, setFormData] = useState(() =>
-    getInitialFormData(initialData)
+    getInitialFormData(initialData),
   );
   const [useManualCoords, setUseManualCoords] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -109,6 +109,23 @@ export function AddCoffeeShopDialog({
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    // validate manual coords are valid lat/long
+    if (useManualCoords && formData.latitude && formData.longitude) {
+      if (
+        parseFloat(formData.latitude) < -90 ||
+        parseFloat(formData.latitude) > 90
+      ) {
+        setError("Latitude must be between -90 and 90");
+        return;
+      }
+      if (
+        parseFloat(formData.longitude) < -180 ||
+        parseFloat(formData.longitude) > 180
+      ) {
+        setError("Longitude must be between -180 and 180");
+        return;
+      }
+    }
 
     // Include coordinates if manually entered
     const submitData = {
@@ -147,7 +164,7 @@ export function AddCoffeeShopDialog({
     } catch (err) {
       // Keep dialog open and show error
       setError(
-        err instanceof Error ? err.message : "Failed to add coffee shop"
+        err instanceof Error ? err.message : "Failed to add coffee shop",
       );
       // Enable manual coords and focus latitude input for geocoding errors
       setUseManualCoords(true);
