@@ -102,6 +102,7 @@ export function AddCoffeeShopDialog({
       setFormData(getInitialFormData(initialData));
       setUseManualCoords(false);
       setError(null);
+      setIsSubmitting(false);
     }
   }, [open, initialData]);
 
@@ -116,35 +117,38 @@ export function AddCoffeeShopDialog({
       const lng = Number(lngStr);
       if (!latStr || !lngStr) {
         setError("Enter both latitude and longitude.");
+        setIsSubmitting(false);
         return;
       }
       if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
         setError("Latitude must be a valid number between -90 and 90.");
+        setIsSubmitting(false);
         return;
       }
       if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
         setError("Longitude must be a valid number between -180 and 180.");
+        setIsSubmitting(false);
         return;
       }
     }
 
     setIsSubmitting(true);
 
-    // Include coordinates if manually entered
-    const submitData = {
-      ...formData,
-      latitude:
-        useManualCoords && formData.latitude
-          ? parseFloat(formData.latitude)
-          : undefined,
-      longitude:
-        useManualCoords && formData.longitude
-          ? parseFloat(formData.longitude)
-          : undefined,
-      instagram: formatInstagramUrl(formData.instagram),
-    };
-
     try {
+      // Include coordinates if manually entered (keep inside try so finally always clears submitting)
+      const submitData = {
+        ...formData,
+        latitude:
+          useManualCoords && formData.latitude
+            ? parseFloat(formData.latitude)
+            : undefined,
+        longitude:
+          useManualCoords && formData.longitude
+            ? parseFloat(formData.longitude)
+            : undefined,
+        instagram: formatInstagramUrl(formData.instagram),
+      };
+
       await onAdd?.(submitData);
       // Only close and reset form on success
       setOpen(false);

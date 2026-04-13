@@ -93,13 +93,37 @@ export function EditCoffeeShopDialog({
       });
       setUseManualCoords(false);
       setError(null);
+      setIsSaving(false);
     }
   }, [open, shop]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
     setError(null);
+
+    if (useManualCoords) {
+      const latStr = formData.latitude.trim();
+      const lngStr = formData.longitude.trim();
+      const lat = Number(latStr);
+      const lng = Number(lngStr);
+      if (!latStr || !lngStr) {
+        setError("Enter both latitude and longitude.");
+        setIsSaving(false);
+        return;
+      }
+      if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+        setError("Latitude must be a valid number between -90 and 90.");
+        setIsSaving(false);
+        return;
+      }
+      if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
+        setError("Longitude must be a valid number between -180 and 180.");
+        setIsSaving(false);
+        return;
+      }
+    }
+
+    setIsSaving(true);
 
     try {
       const updateData: Partial<CoffeeShop> = {
@@ -208,6 +232,8 @@ export function EditCoffeeShopDialog({
                   <Input
                     id="edit-latitude"
                     type="number"
+                    min={-90}
+                    max={90}
                     step="any"
                     value={formData.latitude}
                     onChange={(e) =>
@@ -223,6 +249,8 @@ export function EditCoffeeShopDialog({
                   <Input
                     id="edit-longitude"
                     type="number"
+                    min={-180}
+                    max={180}
                     step="any"
                     value={formData.longitude}
                     onChange={(e) =>
