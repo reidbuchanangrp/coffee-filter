@@ -63,8 +63,7 @@ US_CITIES = [
     ("Dallas", "TX", 32.7767, -96.7970),
     
     # California
-    ("San Francisco", "CA", 37.7749, -122.4194),
-    ("Oakland", "CA", 37.8044, -122.2712),
+    
     ("San Jose", "CA", 37.3382, -121.8863),
     ("Santa Cruz", "CA", 36.9741, -122.0308),
     ("Monterey", "CA", 36.6001, -121.8949),
@@ -81,21 +80,19 @@ US_CITIES = [
     ("Eugene", "OR", 44.0521, -123.0868),
     ("Salem", "OR", 44.9429, -123.0351),
     ("Corvallis", "OR", 44.5646, -123.2620),
+    ("Boise", "ID", 43.6187, -116.2146),
  
     
     # East Coast
-    ("Buffalo", "NY", 42.8864, -78.8784),
+    ("Albany", "NY", 42.6526, -73.7562),
+    ("Syracuse", "NY", 43.0481, -76.1474),
   
     
 
     # Midwest
-    ("Minneapolis", "MN", 44.9778, -93.2650),
-    ("St. Paul", "MN", 44.9537, -93.0892),
-    ("Duluth", "MN", 46.7831, -92.1005),
-    ("Columbus", "OH", 39.9612, -82.9988),
+  
     ("Cleveland", "OH", 41.4993, -81.6944),
-    ("Milwaukee", "WI", 43.0389, -87.9065),
-    ("Indianapolis", "IN", 39.7684, -86.1581),
+    
     ("Fargo", "ND", 46.8772, -96.7898),
 
     # Rocky Mountain
@@ -107,13 +104,14 @@ US_CITIES = [
     
     # South
     ("Nashville", "TN", 36.1627, -86.7816),
-    ("New Orleans", "LA", 29.9511, -90.0715),
+   ("Memphis", "TN", 35.1495, -90.0489),
     ("Savannah", "GA", 32.0809, -81.0912),
     
     # Southwest
     ("Tucson", "AZ", 32.2226, -110.9747),
     ("Albuquerque", "NM", 35.0844, -106.6504),
-    ("Las Vegas", "NV", 36.1699, -115.1398),
+    ("Santa Fe", "NM", 35.6868, -105.9378),
+    ("Reno", "NV", 39.5296, -119.8138),
     
     
 ]

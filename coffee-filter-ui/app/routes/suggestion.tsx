@@ -32,8 +32,8 @@ const Suggestion = () => {
           </div>
           <p className="text-muted-foreground">
             We're always looking to add more amazing coffee shops to our map. If
-            you know of a specialty coffee shop that should be featured, or just
-            want to say hey, let us know!
+            you know of a specialty coffee shop that should be featured, or of a
+            shop that's no longer with us, or just want to say hey, hit us up!
           </p>
           <div className="flex justify-center">
             <Button

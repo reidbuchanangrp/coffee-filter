@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-CoffeeFilter is a coffee shop discovery platform for finding specialty coffee shops in Kansas City. It features an interactive map with filtering, admin CMS capabilities, and detailed shop information.
+CoffeeFilter is a coffee shop discovery platform for finding specialty coffee shops in the United States. It features an interactive map with filtering, admin CMS capabilities, and detailed shop information.
 
 ## Tech Stack
 
@@ -62,6 +62,7 @@ cd backend && uvicorn app.main:app --reload
 ## Documentation Preference
 
 When significant work is done on this project, update `COFFEEFILTER.md` with explanations of:
+
 - The technical architecture and how the various parts connect
 - Technologies used and why we made these technical decisions
 - Bugs encountered and how they were fixed

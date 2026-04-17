@@ -1,12 +1,12 @@
 # CoffeeFilter: A Deep Dive
 
-*A specialty coffee shop discovery app - and the engineering lessons learned building it.*
+_A specialty coffee shop discovery app - and the engineering lessons learned building it._
 
 ---
 
 ## The Big Picture
 
-Imagine you're new to Kansas City and desperately need good coffee. Not Starbucks - *real* coffee. Pour-over, single-origin, the kind made by someone with a beard and strong opinions about water temperature. CoffeeFilter solves this problem with an interactive map that shows you exactly where to find your next caffeine fix.
+Imagine you're new to or visiting a city and desperately need good coffee. Not Starbucks - _real_ coffee. Pour-over, single-origin, the kind made by someone with a beard and strong opinions about water temperature. CoffeeFilter solves this problem with an interactive map that shows you exactly where to find your next caffeine fix.
 
 But under the hood, it's actually two separate applications talking to each other - like a restaurant where the kitchen (backend) and the dining room (frontend) operate independently but need to stay perfectly synchronized.
 
@@ -34,7 +34,8 @@ root.tsx (AuthProvider wraps everything)
 ### The Backend (FastAPI + SQLAlchemy)
 
 The backend in `/backend/` is a Python FastAPI application. FastAPI was chosen because:
-1. It's *fast* (async by default)
+
+1. It's _fast_ (async by default)
 2. Automatic OpenAPI documentation
 3. Pydantic validation means fewer runtime surprises
 4. Python is great for the geocoding/data processing we do
@@ -53,10 +54,9 @@ Leaflet, our mapping library, touches the `window` object on import. Server-side
 
 ```tsx
 // CoffeeShopMap.tsx - the SSR-safe wrapper
-const CoffeeShopMapClient = dynamic(
-  () => import('./CoffeeShopMapClient'),
-  { ssr: false }
-);
+const CoffeeShopMapClient = dynamic(() => import("./CoffeeShopMapClient"), {
+  ssr: false,
+});
 ```
 
 The map component is only imported on the client. The server renders a placeholder, hydration takes over, and the map loads. Crisis averted.
@@ -66,10 +66,11 @@ The map component is only imported on the client. The server renders a placehold
 Users expect to share links. If I'm looking at "Messenger Coffee" zoomed in at a specific location, the URL should capture that. When someone opens my link, they should see exactly what I see.
 
 **The Solution:** We serialize map state to URL params:
+
 - `?view=39.0558,-94.5889,15` (lat, lng, zoom)
 - `?shop=42-messenger-coffee` (selected shop ID + slug)
 
-The tricky part was making this *not* fight with React's state management. We use `useSearchParams` from React Router and carefully debounce map movements (500ms) so we're not hammering the URL on every pixel of pan.
+The tricky part was making this _not_ fight with React's state management. We use `useSearchParams` from React Router and carefully debounce map movements (500ms) so we're not hammering the URL on every pixel of pan.
 
 ```tsx
 // Debounced to avoid URL spam while dragging
@@ -85,8 +86,9 @@ const handleMoveEnd = () => {
 ### Problem 3: The O(n) Lookup Trap
 
 Every time someone clicked a shop or navigated back/forward, we were doing:
+
 ```tsx
-coffeeShops.find(s => s.id === shopId)  // O(n) every time!
+coffeeShops.find((s) => s.id === shopId); // O(n) every time!
 ```
 
 With 50 shops, no big deal. With 500? You'd feel it. With 5000? Pain.
@@ -95,8 +97,8 @@ With 50 shops, no big deal. With 500? You'd feel it. With 5000? Pain.
 
 ```tsx
 const shopById = useMemo(
-  () => new Map(coffeeShops.map(shop => [shop.id, shop])),
-  [coffeeShops]
+  () => new Map(coffeeShops.map((shop) => [shop.id, shop])),
+  [coffeeShops],
 );
 
 // Later: O(1) instead of O(n)
@@ -113,9 +115,9 @@ Most users will never add or edit a coffee shop - that's admin-only. But we were
 
 ```tsx
 const AddCoffeeShopDialog = lazy(() =>
-  import("../components/AddCoffeeShopDialog").then(m => ({
+  import("../components/AddCoffeeShopDialog").then((m) => ({
     default: m.AddCoffeeShopDialog,
-  }))
+  })),
 );
 ```
 
@@ -147,7 +149,7 @@ We handle this with transform functions in `api.ts`:
 ```tsx
 function transformToFrontend(backendShop: any): CoffeeShop {
   return {
-    hasWifi: backendShop.has_wifi,      // snake → camel
+    hasWifi: backendShop.has_wifi, // snake → camel
     pourOver: backendShop.pour_over,
     weeklyHours: backendShop.weekly_hours,
     // ... etc
@@ -161,14 +163,14 @@ function transformToFrontend(backendShop: any): CoffeeShop {
 
 ## Performance Patterns We Use
 
-| Pattern | Where | Why |
-|---------|-------|-----|
-| `useMemo` | Shop filtering, Map lookups | Avoid recalculating on every render |
-| `useCallback` | Event handlers | Stable references for child components |
-| `memo()` | PopupContent component | Skip re-render if props unchanged |
-| Module-level icons | CoffeeShopMapClient | Create Leaflet icons once, reuse forever |
-| Debouncing | Map view changes | Don't spam URL updates while panning |
-| Lazy loading | Admin dialogs | Don't ship code users won't use |
+| Pattern            | Where                       | Why                                      |
+| ------------------ | --------------------------- | ---------------------------------------- |
+| `useMemo`          | Shop filtering, Map lookups | Avoid recalculating on every render      |
+| `useCallback`      | Event handlers              | Stable references for child components   |
+| `memo()`           | PopupContent component      | Skip re-render if props unchanged        |
+| Module-level icons | CoffeeShopMapClient         | Create Leaflet icons once, reuse forever |
+| Debouncing         | Map view changes            | Don't spam URL updates while panning     |
+| Lazy loading       | Admin dialogs               | Don't ship code users won't use          |
 
 ---
 
@@ -191,6 +193,7 @@ function transformToFrontend(backendShop: any): CoffeeShop {
 ## What's Next?
 
 Potential improvements to explore:
+
 - **SWR or React Query** for data fetching (automatic caching, revalidation)
 - **Service Worker** for offline support (view cached shops without network)
 - **Image optimization** with blur placeholders while loading
@@ -198,4 +201,4 @@ Potential improvements to explore:
 
 ---
 
-*Last updated: January 2025 - Performance optimizations (lazy loading, Map lookups)*
+_Last updated: January 2025 - Performance optimizations (lazy loading, Map lookups)_
