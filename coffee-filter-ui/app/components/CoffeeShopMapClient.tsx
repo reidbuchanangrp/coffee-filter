@@ -62,7 +62,7 @@ const coffeeIconHtml = (isSelected: boolean) => `
 
 const starredIconHtml = (isSelected: boolean) => `
   <div style="
-    background: ${isSelected ? "#eab308" : "#f59e0b"};
+    background: ${isSelected ? "#f59e0b" : "#eab308"};
     border-radius: 50%;
     width: 36px;
     height: 36px;

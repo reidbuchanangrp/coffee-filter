@@ -64,13 +64,9 @@ US_CITIES = [
     
     # California
     
-    ("San Jose", "CA", 37.3382, -121.8863),
-    ("Santa Cruz", "CA", 36.9741, -122.0308),
-    ("Monterey", "CA", 36.6001, -121.8949),
+   
    ("Sacramento", "CA", 38.5816, -121.4944),
-    ("Santa Barbara", "CA", 34.4208, -119.6982),
     ("San Luis Obispo", "CA", 35.2828, -120.6596),
-    ("San Clemente", "CA", 33.4269, -117.6118),
  
    
 
