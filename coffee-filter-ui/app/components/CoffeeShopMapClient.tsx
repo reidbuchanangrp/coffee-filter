@@ -229,7 +229,6 @@ export function CoffeeShopMapClient({
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
-  const [useCartoTiles, setUseCartoTiles] = useState(true);
   // Always request user's location on mount (for the blue dot marker)
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -288,25 +287,8 @@ export function CoffeeShopMapClient({
       )}
       <TileLayer
         noWrap
-        subdomains="abcd"
-        maxZoom={20}
-        maxNativeZoom={20}
-        attribution={
-          useCartoTiles
-            ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }
-        url={
-          useCartoTiles
-            ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        }
-        eventHandlers={{
-          tileerror: () => {
-            // Fallback automatically if the current provider starts rejecting tiles.
-            if (useCartoTiles) setUseCartoTiles(false);
-          },
-        }}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png"
       />
       <MarkerClusterGroup
         key={coffeeShops.map((s) => s.id).join(",")}
