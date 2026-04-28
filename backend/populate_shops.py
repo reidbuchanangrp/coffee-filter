@@ -60,7 +60,7 @@ MIN_REVIEWS = 10
 US_CITIES = [
     # Texas
     
-    ("Dallas", "TX", 32.7767, -96.7970),
+    ("El Paso", "TX", 31.7619, -106.4850),
     
     # California
     
@@ -102,12 +102,13 @@ US_CITIES = [
     ("Nashville", "TN", 36.1627, -86.7816),
    ("Memphis", "TN", 35.1495, -90.0489),
     ("Savannah", "GA", 32.0809, -81.0912),
+    ("Birmingham", "AL", 33.5207, -86.8025),
     
     # Southwest
     ("Tucson", "AZ", 32.2226, -110.9747),
     ("Albuquerque", "NM", 35.0844, -106.6504),
     ("Santa Fe", "NM", 35.6868, -105.9378),
-    ("Reno", "NV", 39.5296, -119.8138),
+    
     
     
 ]
