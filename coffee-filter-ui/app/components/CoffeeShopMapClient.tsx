@@ -283,6 +283,7 @@ export function CoffeeShopMapClient({
           position={userLocation}
           icon={userLocationIcon}
           zIndexOffset={1000}
+          interactive={false}
         />
       )}
       <TileLayer

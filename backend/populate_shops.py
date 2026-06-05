@@ -82,11 +82,13 @@ US_CITIES = [
     # East Coast
     ("Albany", "NY", 42.6526, -73.7562),
     ("Syracuse", "NY", 43.0481, -76.1474),
-  
+    ("Yonkers", "NY", 40.9312, -73.8988),
     
 
     # Midwest
-  
+    ("Cincinnati", "OH", 39.1031, -84.5120),
+    ("Peoria", "IL", 40.6937, -89.5890),
+    ("Davenport", "IA", 41.5236, -90.5776),
     ("Cleveland", "OH", 41.4993, -81.6944),
     
     ("Fargo", "ND", 46.8772, -96.7898),
@@ -103,10 +105,12 @@ US_CITIES = [
    ("Memphis", "TN", 35.1495, -90.0489),
     ("Savannah", "GA", 32.0809, -81.0912),
     ("Birmingham", "AL", 33.5207, -86.8025),
+    ("Huntsville", "AL", 34.7304, -86.5861),
+    ("Chapel Hill", "NC", 35.9132, -79.0558),
+    ("Durham", "NC", 35.9940, -78.8986),
     
     # Southwest
     ("Tucson", "AZ", 32.2226, -110.9747),
-    ("Albuquerque", "NM", 35.0844, -106.6504),
     ("Santa Fe", "NM", 35.6868, -105.9378),
     
     

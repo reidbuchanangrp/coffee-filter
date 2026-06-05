@@ -232,6 +232,8 @@
 .user-location-icon {
   background: transparent !important;
   border: none !important;
+  /* Let clicks pass through to shop markers underneath the location dot */
+  pointer-events: none !important;
 }
 
 .user-location-marker {
