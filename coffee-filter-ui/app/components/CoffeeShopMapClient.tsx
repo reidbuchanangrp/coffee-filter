@@ -3,8 +3,9 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import type { CoffeeShop } from "../lib/types";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useState, memo, useMemo } from "react";
+import { useEffect, useState, memo, useMemo, useRef } from "react";
 import { isCurrentlyOpen } from "./WeeklyHoursInput";
+import { LocateFixed } from "lucide-react";
 
 // Memoized popup content - calculates isCurrentlyOpen once per shop
 const PopupContent = memo(function PopupContent({
@@ -173,6 +174,25 @@ function RecenterMap({ center }: { center: [number, number] }) {
   return null;
 }
 
+// Centers on the user's location exactly once per session (first load only)
+function UserLocationController({
+  userLocation,
+  shouldAutoCenter,
+}: {
+  userLocation: [number, number] | null;
+  shouldAutoCenter: boolean;
+}) {
+  const map = useMap();
+  const hasCentered = useRef(false);
+  useEffect(() => {
+    if (userLocation && shouldAutoCenter && !hasCentered.current) {
+      hasCentered.current = true;
+      map.setView(userLocation, map.getZoom());
+    }
+  }, [userLocation, shouldAutoCenter, map]);
+  return null;
+}
+
 // Component to track map view changes and save to URL
 function MapViewTracker({
   onViewChange,
@@ -229,6 +249,7 @@ export function CoffeeShopMapClient({
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
+  const [map, setMap] = useState<L.Map | null>(null);
   // Always request user's location on mount (for the blue dot marker)
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -259,65 +280,77 @@ export function CoffeeShopMapClient({
   const zoom = initialView?.zoom ?? 14; // Use zoom 14 for selected shop for better detail
 
   return (
-    <MapContainer
-      center={center}
-      zoom={zoom}
-      minZoom={2}
-      worldCopyJump={false}
-      maxBounds={[
-        [-90, -180],
-        [90, 180],
-      ]}
-      className="h-full w-full"
-      scrollWheelZoom={true}
-      zoomControl={true}
-    >
-      <MapViewTracker onViewChange={onViewChange} />
-      {searchCenter && <RecenterMap center={searchCenter} />}
-      {/* Only recenter to user location if no saved view, no search, and no selected shop */}
-      {!searchCenter && !initialView && !selectedShopCenter && userLocation && (
-        <RecenterMap center={userLocation} />
-      )}
-      {userLocation && (
-        <Marker
-          position={userLocation}
-          icon={userLocationIcon}
-          zIndexOffset={1000}
-          interactive={false}
-        />
-      )}
-      <TileLayer
-        noWrap
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MarkerClusterGroup
-        key={coffeeShops.map((s) => s.id).join(",")}
-        iconCreateFunction={createClusterIcon}
-        maxClusterRadius={50}
-        spiderfyOnMaxZoom={true}
-        showCoverageOnHover={false}
+    <div className="relative h-full w-full">
+      <MapContainer
+        ref={setMap}
+        center={center}
+        zoom={zoom}
+        minZoom={2}
+        worldCopyJump={false}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        className="h-full w-full"
+        scrollWheelZoom={true}
+        zoomControl={true}
       >
-        {coffeeShops.map((shop) => (
+        <MapViewTracker onViewChange={onViewChange} />
+        {searchCenter && <RecenterMap center={searchCenter} />}
+        <UserLocationController
+          userLocation={userLocation}
+          shouldAutoCenter={!initialView && !searchCenter}
+        />
+        {userLocation && (
           <Marker
-            key={shop.id}
-            position={[shop.latitude, shop.longitude]}
-            icon={getIcon(shop.starred ?? false, shop.id === selectedShopId)}
-            zIndexOffset={shop.starred ? 100 : 0}
-            // @ts-expect-error - custom property for cluster icon detection
-            shopStarred={shop.starred ?? false}
-            eventHandlers={{
-              click: () => {
-                onMarkerClick?.(shop);
-              },
-            }}
-          >
-            <Popup>
-              <PopupContent shop={shop} />
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-    </MapContainer>
+            position={userLocation}
+            icon={userLocationIcon}
+            zIndexOffset={1000}
+            interactive={false}
+          />
+        )}
+        <TileLayer
+          noWrap
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MarkerClusterGroup
+          key={coffeeShops.map((s) => s.id).join(",")}
+          iconCreateFunction={createClusterIcon}
+          maxClusterRadius={50}
+          spiderfyOnMaxZoom={true}
+          showCoverageOnHover={false}
+        >
+          {coffeeShops.map((shop) => (
+            <Marker
+              key={shop.id}
+              position={[shop.latitude, shop.longitude]}
+              icon={getIcon(shop.starred ?? false, shop.id === selectedShopId)}
+              zIndexOffset={shop.starred ? 100 : 0}
+              // @ts-expect-error - custom property for cluster icon detection
+              shopStarred={shop.starred ?? false}
+              eventHandlers={{
+                click: () => {
+                  onMarkerClick?.(shop);
+                },
+              }}
+            >
+              <Popup>
+                <PopupContent shop={shop} />
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+      </MapContainer>
+      {userLocation && (
+        <button
+          onClick={() => map?.flyTo(userLocation, Math.max(map.getZoom(), 14))}
+          className="absolute bottom-6 right-4 z-1000 rounded-full bg-white p-2.5 shadow-md hover:bg-gray-50"
+          aria-label="Center on my location"
+        >
+          <LocateFixed className="h-5 w-5 text-gray-700" />
+        </button>
+      )}
+    </div>
   );
 }
