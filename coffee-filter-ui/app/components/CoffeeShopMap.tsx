@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import type { CoffeeShop } from "../lib/types";
 
 interface CoffeeShopMapProps {
@@ -12,7 +12,7 @@ interface CoffeeShopMapProps {
   selectedShopCenter?: [number, number];
 }
 
-export function CoffeeShopMap({
+export const CoffeeShopMap = memo(function CoffeeShopMap({
   coffeeShops,
   selectedShopId,
   onMarkerClick,
@@ -60,4 +60,4 @@ export function CoffeeShopMap({
       selectedShopCenter={selectedShopCenter}
     />
   );
-}
+});

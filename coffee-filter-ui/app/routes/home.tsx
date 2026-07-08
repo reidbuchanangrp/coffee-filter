@@ -3,19 +3,19 @@ import type { Route } from "./+types/home";
 import { CoffeeShopMap } from "../components/CoffeeShopMap";
 import type { CoffeeShop } from "../lib/types";
 import { getCoffeeShops, deleteCoffeeShop, updateCoffeeShop } from "../lib/api";
-import { useEffect, useState, useCallback, useMemo, lazy, Suspense } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef, lazy } from "react";
 import { CoffeeShopDetailPanel } from "../components/CoffeeShopDetailPanel";
 
 // Lazy load admin-only dialogs to reduce bundle size for non-admin users
 const AddCoffeeShopDialog = lazy(() =>
   import("../components/AddCoffeeShopDialog").then((m) => ({
     default: m.AddCoffeeShopDialog,
-  }))
+  })),
 );
 const EditCoffeeShopDialog = lazy(() =>
   import("../components/EditCoffeeShopDialog").then((m) => ({
     default: m.EditCoffeeShopDialog,
-  }))
+  })),
 );
 import { useAuth } from "../lib/AuthContext";
 import { HamburgerMenu } from "../components/HamburgerMenu";
@@ -43,7 +43,7 @@ function getIdFromSlug(slug: string): number | null {
 
 // Parse map view from URL params (format: "lat,lng,zoom")
 function parseMapView(
-  viewParam: string | null
+  viewParam: string | null,
 ): { lat: number; lng: number; zoom: number } | null {
   if (!viewParam) return null;
   const parts = viewParam.split(",");
@@ -91,7 +91,8 @@ export function meta({ data }: Route.MetaArgs) {
     ? `${shop.name} - CoffeeFilter`
     : "CoffeeFilter - Find Great Coffee Shops Near You";
   const description = shop
-    ? shop.description || `Check out ${shop.name} at ${shop.address} on CoffeeFilter.`
+    ? shop.description ||
+      `Check out ${shop.name} at ${shop.address} on CoffeeFilter.`
     : "Discover local coffee shops with pour-over, WiFi, accessibility info, and hours. Find your perfect spot for great coffee.";
   const ogTitle = shop
     ? `${shop.name} - CoffeeFilter`
@@ -125,9 +126,15 @@ export default function Home() {
     Partial<CoffeeShop> | undefined
   >(undefined);
   const [searchCenter, setSearchCenter] = useState<[number, number] | null>(
-    null
+    null,
   );
-  
+
+  // React Router recreates setSearchParams whenever searchParams changes
+  // (its deps are [navigate, searchParams]). Keep the latest setter in a ref
+  // so our handlers stay referentially stable and don't defeat the map's memo.
+  // Safe because both handlers use the functional-updater form.
+  const setSearchParamsRef = useRef(setSearchParams);
+  setSearchParamsRef.current = setSearchParams;
 
   // Parse initial map view from URL
   const initialMapView = useMemo(() => {
@@ -137,39 +144,36 @@ export default function Home() {
   // Build shop lookup Map for O(1) lookups by ID
   const shopById = useMemo(
     () => new Map(coffeeShops.map((shop) => [shop.id, shop])),
-    [coffeeShops]
+    [coffeeShops],
   );
 
   // Update URL when map view changes (debounced in map component)
   const handleMapViewChange = useCallback(
     (lat: number, lng: number, zoom: number) => {
       const viewString = `${lat.toFixed(4)},${lng.toFixed(4)},${zoom}`;
-      setSearchParams((prev) => {
+      setSearchParamsRef.current((prev) => {
         const newParams = new URLSearchParams(prev);
         newParams.set("view", viewString);
         return newParams;
       });
     },
-    [setSearchParams]
+    [],
   );
 
   // Update URL when shop is selected (preserving view param)
-  const handleSelectShop = useCallback(
-    (shop: CoffeeShop | null) => {
-      setSelectedShop(shop);
-      setSearchParams((prev) => {
-        const newParams = new URLSearchParams(prev);
-        if (shop) {
-          const slug = createSlug(shop.id, shop.name);
-          newParams.set("shop", slug);
-        } else {
-          newParams.delete("shop");
-        }
-        return newParams;
-      });
-    },
-    [setSearchParams]
-  );
+  const handleSelectShop = useCallback((shop: CoffeeShop | null) => {
+    setSelectedShop(shop);
+    setSearchParamsRef.current((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (shop) {
+        const slug = createSlug(shop.id, shop.name);
+        newParams.set("shop", slug);
+      } else {
+        newParams.delete("shop");
+      }
+      return newParams;
+    });
+  }, []);
 
   // Handle browser back/forward navigation via search params
   useEffect(() => {
@@ -202,7 +206,7 @@ export default function Home() {
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load coffee shops"
+        err instanceof Error ? err.message : "Failed to load coffee shops",
       );
       console.error("Error loading coffee shops:", err);
     } finally {
@@ -252,7 +256,7 @@ export default function Home() {
     } catch (err) {
       console.error("Error deleting coffee shop:", err);
       alert(
-        err instanceof Error ? err.message : "Failed to delete coffee shop"
+        err instanceof Error ? err.message : "Failed to delete coffee shop",
       );
       throw err;
     }
@@ -260,7 +264,7 @@ export default function Home() {
 
   const handleUpdateCoffeeShop = async (
     id: number,
-    data: Partial<CoffeeShop>
+    data: Partial<CoffeeShop>,
   ) => {
     try {
       const updatedShop = await updateCoffeeShop(id, data);
@@ -269,7 +273,7 @@ export default function Home() {
     } catch (err) {
       console.error("Error updating coffee shop:", err);
       alert(
-        err instanceof Error ? err.message : "Failed to update coffee shop"
+        err instanceof Error ? err.message : "Failed to update coffee shop",
       );
       throw err;
     }
@@ -295,10 +299,19 @@ export default function Home() {
   // Memoize filtered shops to avoid recalculating on every render
   const openShops = useMemo(
     () => coffeeShops.filter((shop) => isCurrentlyOpen(shop.weeklyHours || {})),
-    [coffeeShops]
+    [coffeeShops],
   );
 
   const displayedShops = isOpen ? openShops : coffeeShops;
+
+  // Stable reference so redundant re-renders don't re-render the memoized map
+  const selectedShopCenter = useMemo<[number, number] | undefined>(
+    () =>
+      selectedShop
+        ? [selectedShop.latitude, selectedShop.longitude]
+        : undefined,
+    [selectedShop],
+  );
 
   return (
     <div className="h-screen flex flex-col">
@@ -353,11 +366,7 @@ export default function Home() {
           searchCenter={searchCenter}
           initialView={initialMapView}
           onViewChange={handleMapViewChange}
-          selectedShopCenter={
-            selectedShop
-              ? [selectedShop.latitude, selectedShop.longitude]
-              : undefined
-          }
+          selectedShopCenter={selectedShopCenter}
         />
         {selectedShop && (
           <>
