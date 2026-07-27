@@ -51,7 +51,7 @@ EXCLUDE_KEYWORDS = [
 ]
 
 # Minimum rating (0 to disable)
-MIN_RATING = 4.0
+MIN_RATING = 3.0
 
 # Minimum number of reviews (0 to disable)
 MIN_REVIEWS = 10
@@ -106,9 +106,6 @@ US_CITIES = [
    ("Memphis", "TN", 35.1495, -90.0489),
     ("Savannah", "GA", 32.0809, -81.0912),
     ("Birmingham", "AL", 33.5207, -86.8025),
-    ("Huntsville", "AL", 34.7304, -86.5861),
-    ("Chapel Hill", "NC", 35.9132, -79.0558),
-    ("Durham", "NC", 35.9940, -78.8986),
     
     # Southwest
     ("Tucson", "AZ", 32.2226, -110.9747),
