@@ -39,7 +39,7 @@ EXCLUDE_CHAINS = [
     "mcdonald's", "mcdonalds", "panera", "tim hortons", "coffee bean & tea leaf",
     "pj's coffee", "black rock coffee", "human bean", "gloria jean's",
     "it's a grind", "coffee beanery", "aroma joe's", "ziggi's",
-    "blank street", "7 brew coffee"  # Some consider these chains now
+    "blank street", "7 brew coffee", "coffee emporium"  # Some consider these chains now
 ]
 
 # Keywords that indicate non-specialty places (lowercase)
@@ -60,7 +60,6 @@ MIN_REVIEWS = 10
 US_CITIES = [
     # Texas
     
-    ("El Paso", "TX", 31.7619, -106.4850),
     
     # California
     
@@ -73,38 +72,24 @@ US_CITIES = [
     # Pacific Northwest
     ("Vancouver", "BC", 49.2827, -123.1207),
     ("Olympia", "WA", 47.0379, -122.9007),
-    ("Eugene", "OR", 44.0521, -123.0868),
-    ("Salem", "OR", 44.9429, -123.0351),
-    ("Corvallis", "OR", 44.5646, -123.2620),
-    ("Boise", "ID", 43.6187, -116.2146),
  
     
     # East Coast
-    ("Albany", "NY", 42.6526, -73.7562),
-    ("Syracuse", "NY", 43.0481, -76.1474),
-    ("Yonkers", "NY", 40.9312, -73.8988),
+    
+    
     
 
     # Midwest
-    ("Cincinnati", "OH", 39.1031, -84.5120),
-    ("Peoria", "IL", 40.6937, -89.5890),
-    ("Davenport", "IA", 41.5236, -90.5776),
     ("Cleveland", "OH", 41.4993, -81.6944),
-    ("Flint", "MI", 43.0347, -83.6675),
     
-    ("Fargo", "ND", 46.8772, -96.7898),
 
     # Rocky Mountain
     ("Billings", "MT", 45.7831, -108.5007),
     ("Bozeman", "MT", 45.6769, -111.0429),
     ("Cheyenne", "WY", 41.1393, -104.8202),
     ("Colorado Springs", "CO", 38.8339, -104.8202),
-    ("Fort Collins", "CO", 40.5853, -105.0844),
     
     # South
-    ("Nashville", "TN", 36.1627, -86.7816),
-   ("Memphis", "TN", 35.1495, -90.0489),
-    ("Savannah", "GA", 32.0809, -81.0912),
     ("Birmingham", "AL", 33.5207, -86.8025),
     
     # Southwest
